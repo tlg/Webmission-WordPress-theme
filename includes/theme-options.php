@@ -624,7 +624,7 @@ $woo_metaboxes = array();
 
 global $post;
 
-if ( ( get_post_type() == 'post') || ( !get_post_type() ) ) {
+if ( ( get_post_type() == 'post') || ( !get_post_type() )  || ( get_post_type() == 'page')) {
 
 	$woo_metaboxes[] = array (	"name" => "image",
 								"label" => "Image",
