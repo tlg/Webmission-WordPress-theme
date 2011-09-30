@@ -20,6 +20,7 @@
 	a new version of timthumb.
 
 */
+date_default_timezone_set('CET');
 define ('VERSION', '2.8');										// Version of this script 
 //Load a config file if it exists. Otherwise, use the values below.
 if( file_exists('../timthumb-config.php')) 	require_once('../timthumb-config.php');
