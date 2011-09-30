@@ -1,5 +1,25 @@
 *** WooThemes Framework Changelog **
 
+2011.09.30 - version 4.6.1
+ * admin-functions.php - added new Google webfonts
+
+2011.09.22 - version 4.6.0
+ * admin-functions.php - Modified post type archives support and fixed "double 'posts' page link" issue in woo_breadcrumbs(). Make "less than a minute ago" and "about a minute ago" strings translatable in Twitter widget JavaScript.
+ * admin-interface.php - Move save logic for theme options into a separate function and add support for non-JavaScript saving of theme options, framework settings and SEO settings.
+ * admin-framework-settings.php, 
+   admin-seo.php - Make sure "woo_save" field is present, as well as form method is set to "post".
+ * admin-shortcodes.php - Added support for "language" parameter to Google +1 shortcode and it's generator. Adjusted the shortcode to use HTML5 valid syntax, instead of <g:plusone> tags.
+ * /js/shortcode-generator/js/shortcodes/google_plusone.js - Added language selector to generator.
+
+2011.09.16 - version 4.5.4
+ * admin-interface.php - Adjust theme update notification links to point to the new theme "Downloads" page in the WooThemes Account Dashboard.
+
+2011.09.07 - version 4.5.3
+ * admin-interface.php - Fixed bug in theme update notification checker, to retrieve only the latest version number.
+
+2011.09.05 - version 4.5.2
+ * admin-shortcodes.php - Fixed "only first thumbnail displays in related posts shortcode" issue.
+
 2011.08.30 - version 4.5.1
  * admin-backup.php - Make sure the export tool notice displays only on the "Backup Settings" screen.
 

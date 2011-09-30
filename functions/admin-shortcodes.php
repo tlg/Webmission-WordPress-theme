@@ -359,12 +359,12 @@ function woo_shortcode_related_posts ( $atts ) {
 				setup_postdata( $post );
 				
 				if ( $image <= 0 ) {
-					$image = '';
+					$image_html = '';
 				} else {
-					$image = '<a href="' . get_permalink( $post->ID ) . '" class="thumbnail">' . woo_image( 'link=img&width=' . $image . '&height=' . $image . '&return=true&id=' . $post->ID ) . '</a>' . "\n";
+					$image_html = '<a href="' . get_permalink( $post->ID ) . '" class="thumbnail">' . woo_image( 'link=img&width=' . $image . '&height=' . $image . '&return=true&id=' . $post->ID ) . '</a>' . "\n";
 				}
 				
-				$output .= '<li class="post-id-' . $post->ID . '">' . "\n" . $image . "\n" . '<a href="' . get_permalink( $post->ID ) . '" title="' . the_title_attribute( array( 'echo' => 0 ) ) . '" class="related-title"><span>' . get_the_title( $post->ID )  . '</span></a>' . "\n" . '</li>' . "\n";
+				$output .= '<li class="post-id-' . $post->ID . '">' . "\n" . $image_html . "\n" . '<a href="' . get_permalink( $post->ID ) . '" title="' . the_title_attribute( array( 'echo' => 0 ) ) . '" class="related-title"><span>' . get_the_title( $post->ID )  . '</span></a>' . "\n" . '</li>' . "\n";
 			}
 			
 			$output .= '</ul>' . "\n";
@@ -2263,6 +2263,54 @@ function woo_shortcode_google_plusone ( $atts, $content = null ) {
 	$allowed_floats = array( 'left' => ' fl', 'right' => ' fr', 'none' => '' );
 	if ( ! in_array( $float, array_keys( $allowed_floats ) ) ) { $float = 'none'; }
 
+	// A friendly-looking array of supported languages, along with their codes.
+	$supported_languages = array(
+		'ar' => 'Arabic', 
+		'bg' => 'Bulgarian', 
+		'ca' => 'Catalan', 
+		'zh-CN' => 'Chinese (Simplified)', 
+		'zh-TW' => 'Chinese (Traditional)', 
+		'hr' => 'Croatian', 
+		'cs' => 'Czech', 
+		'da' => 'Danish', 
+		'nl' => 'Dutch', 
+		'en-US' => 'English (US)', 
+		'en-GB' => 'English (UK)', 
+		'et' => 'Estonian', 
+		'fil' => 'Filipino', 
+		'fi' => 'Finnish', 
+		'fr' => 'French', 
+		'de' => 'German', 
+		'el' => 'Greek', 
+		'iw' => 'Hebrew', 
+		'hi' => 'Hindi', 
+		'hu' => 'Hungarian', 
+		'id' => 'Indonesian', 
+		'it' => 'Italian', 
+		'ja' => 'Japanese', 
+		'ko' => 'Korean', 
+		'lv' => 'Latvian', 
+		'lt' => 'Lithuanian', 
+		'ms' => 'Malay', 
+		'no' => 'Norwegian', 
+		'fa' => 'Persian', 
+		'pl' => 'Polish', 
+		'pt-BR' => 'Portuguese (Brazil)', 
+		'pt-PT' => 'Portuguese (Portugal)', 
+		'ro' => 'Romanian', 
+		'ru' => 'Russian', 
+		'sr' => 'Serbian', 
+		'sv' => 'Swedish', 
+		'sk' => 'Slovak', 
+		'sl' => 'Slovenian', 
+		'es' => 'Spanish', 
+		'es-419' => 'Spanish (Latin America)', 
+		'th' => 'Thai', 
+		'tr' => 'Turkish', 
+		'uk' => 'Ukrainian', 
+		'vi' => 'Vietnamese'
+	);
+
 	$output = '';
 	$tag_atts = '';
 
@@ -2279,11 +2327,26 @@ function woo_shortcode_google_plusone ( $atts, $content = null ) {
 		}
 	}
 
-	$output = '<div class="shortcode-google-plusone' . $allowed_floats[$float] . '"><g:plusone' . $tag_atts . '></g:plusone></div><!--/.shortcode-google-plusone-->' . "\n";
+	$output = '<div class="shortcode-google-plusone' . $allowed_floats[$float] . '"><div class="g-plusone" ' . $tag_atts . '></div></div><!--/.shortcode-google-plusone-->' . "\n";
+	
+	// Parameters to pass to Google PlusOne JavaScript.
+	if ( in_array( $atts['language'] , array_values( $supported_languages ) ) ) {
+		$language = '';
+		
+		foreach ( $supported_languages as $k => $v ) {
+			if ( $v == $atts['language'] ) {
+				$language = $k;
+				break;
+			}
+		}
+		
+		$params = array( 'language' => $language );
+	}
 
 	// Enqueue the Google +1 button JavaScript from their API.
-	add_action( 'wp_footer', 'woo_shortcode_google_plusone_js' );
-	add_action( 'woo_shortcode_generator_preview_footer', 'woo_shortcode_google_plusone_js' );
+	// add_action( 'wp_footer', 'woo_shortcode_google_plusone_js' );
+	// add_action( 'woo_shortcode_generator_preview_footer', 'woo_shortcode_google_plusone_js' );
+	woo_shortcode_google_plusone_js( $params );
 
 	return $output . "\n";
 
@@ -2295,8 +2358,12 @@ add_shortcode( 'google_plusone', 'woo_shortcode_google_plusone' );
 /* 25.1 Load Javascript for Google +1 Button
 /*-----------------------------------------------------------------------------------*/
 
-function woo_shortcode_google_plusone_js () {
-	echo '<script src="https://apis.google.com/js/plusone.js" type="text/javascript"></script>' . "\n";
+function woo_shortcode_google_plusone_js ( $params ) {
+	echo '<script src="https://apis.google.com/js/plusone.js" type="text/javascript">' . "\n";
+	if ( isset( $params['language'] ) && ( $params['language'] != '' ) ) {
+		echo ' {lang: \'' . $params['language'] . '\'}' . "\n";
+	}
+	echo '</script>' . "\n";
 	echo '<script type="text/javascript">gapi.plusone.go();</script>' . "\n";
 } // End woo_shortcode_google_plusone_js()
 

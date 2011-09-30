@@ -1018,9 +1018,9 @@ if ( !function_exists( 'woo_twitter_script') ) {
 	      delta = delta + (relative_to.getTimezoneOffset() * 60);
 
 	      if (delta < 60) {
-	        return 'less than a minute ago';
+	        return '<?php _e( 'less than a minute ago', 'woothemes' ); ?>';
 	      } else if(delta < 120) {
-	        return 'about a minute ago';
+	        return '<?php _e( 'about a minute ago', 'woothemes' ); ?>';
 	      } else if(delta < (60*60)) {
 	        return (parseInt(delta / 60)).toString() + ' <?php _e( 'minutes ago', 'woothemes' ); ?>';
 	      } else if(delta < (120*60)) {
@@ -2221,7 +2221,44 @@ $google_fonts = array(	array( 'name' => "Cantarell", 'variant' => ':r,b,i,bi'),
 						array( 'name' => "Actor", 'variant' => ''),
 						array( 'name' => "Delius Swash Caps", 'variant' => ''),
 						array( 'name' => "Smokum", 'variant' => ''),
-						array( 'name' => "Tulpen One", 'variant' => '')
+						array( 'name' => "Tulpen One", 'variant' => ''),
+						array( 'name' => "Coustard", 'variant' => ':r,b'),
+						array( 'name' => "Andika", 'variant' => ''),
+						array( 'name' => "Alice", 'variant' => ''),
+						array( 'name' => "Questrial", 'variant' => ''),
+						array( 'name' => "Comfortaa", 'variant' => ':r,b'),
+						array( 'name' => "Geostar", 'variant' => ''),
+						array( 'name' => "Geostar Fill", 'variant' => ''),
+						array( 'name' => "Volkhov", 'variant' => ''),
+						array( 'name' => "Voltaire", 'variant' => ''),
+						array( 'name' => "Montez", 'variant' => ''),
+						array( 'name' => "Short Stack", 'variant' => ''),
+						array( 'name' => "Vidaloka", 'variant' => ''),
+						array( 'name' => "Aldrich", 'variant' => ''),
+						array( 'name' => "Numans", 'variant' => ''),
+						array( 'name' => "Days One", 'variant' => ''),
+						array( 'name' => "Gentium Book Basic", 'variant' => ''),
+						array( 'name' => "Monoton", 'variant' => ''),
+						array( 'name' => "Alike", 'variant' => ''),
+						array( 'name' => "Delius Unicase", 'variant' => ''),
+						array( 'name' => "Abril Fatface", 'variant' => ''),
+						array( 'name' => "Dorsa", 'variant' => ''),
+						array( 'name' => "Antic", 'variant' => ''),
+						array( 'name' => "Passero One", 'variant' => ''),
+						array( 'name' => "Fanwood Text", 'variant' => ''),
+						array( 'name' => "Prociono", 'variant' => ''),
+						array( 'name' => "Merienda One", 'variant' => ''),
+						array( 'name' => "Changa One", 'variant' => ''),
+						array( 'name' => "Julee", 'variant' => ''),
+						array( 'name' => "Prata", 'variant' => ''),
+						array( 'name' => "Adamina", 'variant' => ''),
+						array( 'name' => "Sorts Mill Goudy", 'variant' => ''),
+						array( 'name' => "Terminal Dosis", 'variant' => ''),
+						array( 'name' => "Sansita One", 'variant' => ''),
+						array( 'name' => "Chivo", 'variant' => ''),
+						array( 'name' => "Spinnaker", 'variant' => ''),
+						array( 'name' => "Poller One", 'variant' => ''),
+						array( 'name' => "Alike Angular", 'variant' => '')
 );
 
 
@@ -2569,7 +2606,7 @@ function woo_breadcrumbs( $args = array() ) {
 
 	/* Set up the default arguments for the breadcrumb. */
 	$defaults = array(
-		'separator' => '&raquo;',
+		'separator' => '&gt;',
 		'before' => '<span class="breadcrumb-title">' . __( 'You are here:', $textdomain ) . '</span>',
 		'after' => false,
 		'front_page' => true,
@@ -2617,7 +2654,7 @@ function woo_breadcrumbs( $args = array() ) {
 		$parent = $post->post_parent;
 
 		/* If a custom post type, check if there are any pages in its hierarchy based on the slug. */
-		if ( 'page' !== $post_type ) {
+		if ( 'page' !== $post_type && 'post' !== $post_type ) {
 
 			$post_type_object = get_post_type_object( $post_type );
 
@@ -2634,7 +2671,7 @@ function woo_breadcrumbs( $args = array() ) {
 				$trail = array_merge( $trail, woo_breadcrumbs_get_parents( '', $path ) );
 
 			/* If there's an archive page, add it to the trail. */
-			if ( !empty( $post_type_object->rewrite['archive'] ) && function_exists( 'get_post_type_archive_link' ) )
+			if ( !empty( $post_type_object->has_archive ) && function_exists( 'get_post_type_archive_link' ) )
 				$trail[] = '<a href="' . get_post_type_archive_link( $post_type ) . '" title="' . esc_attr( $post_type_object->labels->name ) . '">' . $post_type_object->labels->name . '</a>';
 		}
 

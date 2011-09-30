@@ -226,7 +226,7 @@ function woothemes_add_admin() {
     	$file_test = false;
     }
     $timthumb_update = get_option('woo_timthumb_update');
-    if($super_user == $current_user_id || empty($super_user) && $timthumb_update == '' && $file_test) {
+    if( ( $super_user == $current_user_id || empty($super_user) ) && $timthumb_update == '' && $file_test) {
          $woothemepage = add_submenu_page( 'woothemes', 'Timthumb Update', 'Update Timthumb', 'manage_options', 'woothemes_timthumb_update', 'woothemes_timthumb_update_page' );
     }
     
@@ -241,6 +241,12 @@ function woothemes_add_admin() {
 	add_action( "admin_print_scripts-$wooframeworksettings", 'woo_load_only' );
 	add_action( "admin_print_scripts-$wooseo", 'woo_load_only' );
 	add_action( "admin_print_scripts-$woosbm", 'woo_load_only' );
+
+	// Add the non-JavaScript "save" to the load of each of the screens.
+	add_action( "load-$woopage", 'woo_nonajax_callback' );
+	add_action( "load-$wooframeworksettings", 'woo_nonajax_callback' );
+	add_action( "load-$wooseo", 'woo_nonajax_callback' );
+	// add_action( "load-$woosbm", 'woo_nonajax_callback' );
 
 }
 }
@@ -324,12 +330,11 @@ function woothemes_options_page(){
     }
 
 	global $pagenow;
-
 ?>
 <div class="wrap" id="woo_container">
 <div id="woo-popup-save" class="woo-save-popup"><div class="woo-save-save"><?php _e( 'Options Updated', 'woothemes' ); ?></div></div>
 <div id="woo-popup-reset" class="woo-save-popup"><div class="woo-save-reset"><?php _e( 'Options Reset', 'woothemes' ); ?></div></div>
-    <form action="" enctype="multipart/form-data" id="wooform">
+    <form action="" enctype="multipart/form-data" id="wooform" method="post">
     <?php
     	// Add nonce for added security.
     	if ( function_exists( 'wp_nonce_field' ) ) { wp_nonce_field( 'wooframework-theme-options-update' ); } // End IF Statement
@@ -375,17 +380,18 @@ function woothemes_options_page(){
         <div id="main">
 	        <div id="woo-nav">
 				<ul>
-					<?php echo $return[1] ?>
+					<?php echo $return[1]; ?>
 				</ul>
 			</div>
 			<div id="content">
-	         <?php echo $return[0]; /* Settings */ ?>
+	        	<?php echo $return[0]; /* Settings */ ?>
 	        </div>
 	        <div class="clear"></div>
 
         </div>
         <div class="save_bar_top">
         <img style="display:none" src="<?php echo get_template_directory_uri(); ?>/functions/images/loading-bottom.gif" class="ajax-loading-img ajax-loading-img-bottom" alt="Working..." />
+        <input type="hidden" name="woo_save" value="save" />
         <input type="submit" value="Save All Changes" class="button submit-button" />
         </form>
 
@@ -407,7 +413,7 @@ function woothemes_options_page(){
 	    	} // End IF Statement
 	    ?>
             <span class="submit-footer-reset">
-            <input name="reset" type="submit" value="Reset All Options" class="button submit-button reset-button" onclick="return confirm( 'Click OK to reset all options. All settings will be lost!' );" />
+            <input name="reset" type="submit" value="Reset All Theme Options" class="button submit-button reset-button" onclick="return confirm( 'Click OK to reset all theme options. All settings will be lost!' );" />
             <input type="hidden" name="woo_save" value="reset" />
             </span>
         </form>
@@ -857,8 +863,6 @@ function woo_load_only() {
 						success.fadeIn();
 						window.setTimeout(function(){
 						   success.fadeOut();
-
-
 						}, 2000);
 					});
 
@@ -874,25 +878,28 @@ function woo_load_only() {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Ajax Save Action - woo_ajax_callback */
+/* Default Save Action - woo_options_save */
 /*-----------------------------------------------------------------------------------*/
 
-add_action( 'wp_ajax_woo_ajax_post_action', 'woo_ajax_callback' );
+/**
+ * woo_options_save()
+ *
+ * Save options to the database. Moved to a dedicated function.
+ *
+ * @since V4.6.0
+ */
 
-if (!function_exists( 'woo_ajax_callback')) {
-function woo_ajax_callback() {
+function woo_options_save ( $type, $data ) {
+global $wpdb; // this is how you get access to the database
 
-	// check security with nonce.
-	if ( function_exists( 'check_ajax_referer' ) ) { check_ajax_referer( 'wooframework-theme-options-update', '_ajax_nonce' ); } // End IF Statement
+	$status = false; // We set this to true if the settings have saved successfully.
 
-	global $wpdb; // this is how you get access to the database
-
-	$save_type = $_POST['type'];
+	$save_type = $type;
 
 	//Uploads
 	if($save_type == 'upload'){
 
-		$clickedID = $_POST['data']; // Acts as the name
+		$clickedID = $data; // Acts as the name
 		$filename = $_FILES[$clickedID];
        	$filename['name'] = preg_replace( '/[^a-zA-Z0-9._\-]/', '', $filename['name']);
 
@@ -910,11 +917,11 @@ function woo_ajax_callback() {
 	}
 	elseif($save_type == 'image_reset'){
 
-			$id = $_POST['data']; // Acts as the name
+			$id = $data; // Acts as the name
 			delete_option($id);
 	}
 	elseif($save_type == 'string_builder_add'){
-		$data = $_POST['data'];
+		$data = $data;
 		parse_str($data,$output);
 
 		$id = $output['id'];
@@ -932,7 +939,7 @@ function woo_ajax_callback() {
 
 	}
 	elseif($save_type == 'string_builder_delete'){
-		$data = $_POST['data'];
+		$data = $data;
 		parse_str($data,$output);
 
 		$id = $output['id'];
@@ -944,13 +951,18 @@ function woo_ajax_callback() {
 
 	}
 	elseif ($save_type == 'options' OR $save_type == 'seo' OR $save_type == 'tumblog' OR $save_type == 'framework') {
-		$data = $_POST['data'];
-		parse_str($data,$output);
-
+		// $data = $_POST['data'];
+		
+		if ( is_array( $data ) ) {
+			$output = $data; // $output variable used below during save.
+		} else {
+			parse_str( $data, $output );
+		}
+		
 		// Remove the "woo_save" item from the output array.
 		if ( isset( $output['woo_save'] ) && $output['woo_save'] == 'reset' ) { unset( $output['woo_save'] ); }
 
-		$data = stripslashes( $data ); // Remove slashes from the serialised string.
+		// $data = stripslashes( $data ); // Remove slashes from the serialised string.
 
 		//Pull options
         	$options = get_option( 'woo_template' );
@@ -1082,6 +1094,9 @@ function woo_ajax_callback() {
 				}
 			}
 		}
+		
+		// Assume that all has been completed and set $status to true.
+		$status = true;
 	}
 
 
@@ -1140,16 +1155,115 @@ function woo_ajax_callback() {
 		$output .= "</ul>";
 		$output = base64_encode($output);
 
-		update_option( 'woo_options',$woo_array);
-		update_option( 'woo_settings_encode',$output);
-
+		update_option( 'woo_options', $woo_array );
+		// update_option( 'woo_settings_encode', $output );
+		
+		// Assume that all has been completed and set $status to true.
+		$status = true;
 	}
+	
+	return $status;
+} // End woo_options_save()
 
-  die();
+/*-----------------------------------------------------------------------------------*/
+/* Non-AJAX Save Action - woo_nonajax_callback()
+/*
+/* This action is hooked on load of the various screens.
+/* The hook is done when the pages are registered.
+/*-----------------------------------------------------------------------------------*/
 
+if ( ! function_exists( 'woo_nonajax_callback' ) ) {
+	function woo_nonajax_callback() {
+		if ( isset( $_POST['_ajax_nonce'] ) && isset( $_POST['woo_save'] ) && ( $_POST['woo_save'] == 'save' ) ) {
+		
+			$nonce_key = 'wooframework-theme-options-update';
+			
+			switch ( $_REQUEST['page'] ) {
+				case 'woothemes':
+					$type = 'options';
+					$nonce_key = 'wooframework-theme-options-update';
+				break;
+				
+				case 'woothemes_framework_settings':
+					$type = 'framework';
+					$nonce_key = 'wooframework-framework-options-update';
+				break;
+				
+				case 'woothemes_seo':
+					$type = 'seo';
+					$nonce_key = 'wooframework-seo-options-update';
+				break;
+				
+				case 'woothemes_tumblog':
+					$type = 'tumblog';
+				break;
+				
+				default:
+					$type = '';
+			}
+		
+			// check security with nonce.
+			if ( function_exists( 'check_admin_referer' ) ) { check_admin_referer( $nonce_key, '_ajax_nonce' ); } // End IF Statement
+		
+			// Remove non-options fields from the $_POST.
+			$fields_to_remove = array( '_wpnonce', '_wp_http_referer', '_ajax_nonce', 'woo_save' );
+			
+			$data = array();
+			
+			foreach ( $_POST as $k => $v ) {
+				if ( in_array( $k, $fields_to_remove ) ) {} else {
+					$data[$k] = $v;
+				}
+			}
+		
+			$status = woo_options_save( $type, $data );
+		
+			if ( $status ) {
+				add_action( 'admin_notices', 'woo_admin_message_success', 0 );
+			} else {
+				add_action( 'admin_notices', 'woo_admin_message_error', 0 );
+			}
+	
+		} // End IF Statement
+	} // End woo_nonajax_callback()
 }
+
+/*-----------------------------------------------------------------------------------*/
+/* AJAX Save Action - woo_ajax_callback() */
+/*-----------------------------------------------------------------------------------*/
+
+add_action( 'wp_ajax_woo_ajax_post_action', 'woo_ajax_callback' );
+
+if ( ! function_exists( 'woo_ajax_callback' ) ) {
+	function woo_ajax_callback() {
+	
+		// check security with nonce.
+		if ( function_exists( 'check_ajax_referer' ) ) { check_ajax_referer( 'wooframework-theme-options-update', '_ajax_nonce' ); } // End IF Statement
+	
+		$data = maybe_unserialize( $_POST['data'] );
+	
+		woo_options_save( $_POST['type'], $data );
+	
+	  die();
+	
+	} // End woo_ajax_callback()
 }
 
+/*-----------------------------------------------------------------------------------*/
+/* Admin Messages */
+/*-----------------------------------------------------------------------------------*/
+
+function woo_admin_message_success () {
+	echo '<div class="updated fade" style="display: block !important;"><p>' . __( 'Options Saved Successfully', 'woothemes' ) . '</p></div><!--/.updated fade-->' . "\n";
+} // End woo_admin_message_success()
+
+function woo_admin_message_error () {
+	echo '<div class="error fade" style="display: block !important;"><p>' . __( 'There was an error while saving your options. Please try again.', 'woothemes' ) . '</p></div><!--/.error fade-->' . "\n";
+} // End woo_admin_message_error()
+
+function woo_admin_message_reset () {
+	echo '<div class="updated fade" style="display: block !important;"><p>' . __( 'Options Reset Successfully', 'woothemes' ) . '</p></div><!--/.updated fade-->' . "\n";
+} // End woo_admin_message_reset()
 
 /*-----------------------------------------------------------------------------------*/
 /* Generates The Options - woothemes_machine */
@@ -1757,8 +1871,23 @@ if (!function_exists( 'woothemes_version_checker')) {
 		}
 		add_action( 'wp_feed_options', 'do_not_cache_feeds' );
 
+		add_filter('http_request_args', 'woothemes_http_request_args', 100, 1);
+		function woothemes_http_request_args($r) //called on line 237
+		{
+			$r['timeout'] = 15;
+			return $r;
+		}
+		
+		add_action('http_api_curl', 'woothemes_http_api_curl', 100, 1);
+		function woothemes_http_api_curl($handle) //called on line 1315
+		{
+			curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, 15 );
+			curl_setopt( $handle, CURLOPT_TIMEOUT, 15 );
+		}
+
 		// Get a SimplePie feed object from the specified feed source.
 		$theme_name = str_replace( "-","",strtolower(get_option( 'woo_themename')));
+		
 		$feed_url = 'http://www.woothemes.com/?feed=updates&theme=' . $theme_name;
 
 		$rss = fetch_feed($feed_url);
@@ -1784,10 +1913,12 @@ if (!function_exists( 'woothemes_version_checker')) {
 		if ($maxitems == 0) { $latest_version_via_rss = 0; }
 			else {
 			// Loop through each feed item and display each item as a hyperlink.
-			foreach ( $rss_items as $item ) :
+			foreach ( $rss_items as $item ) :				
 				$latest_version_via_rss = $item->get_title();
+				break; // Take only the first version number. Break away when we have it.
 			endforeach;
 		}
+		
 		//Check if version is the latest - assume standard structure x.x.x
 		$pieces_rss = explode( ".", $latest_version_via_rss);
 		$pieces_local = explode( ".", $local_version);
@@ -1825,7 +1956,7 @@ if (!function_exists( 'woothemes_version_checker')) {
 
 			//set version checker message
 			if ($version_sentinel == true) {
-				$update_message = '<div class="update_available">Theme update is available (v.' . $latest_version_via_rss . ') - <a href="http://www.woothemes.com/amember">Get the new version</a>.</div>';
+				$update_message = '<div class="update_available">' . __( 'Theme update is available', 'woothemes' ) . ' (v.' . $latest_version_via_rss . ') - <a href="http://www.woothemes.com/products/">' . __( 'Get the new version', 'woothemes' ) . '</a>.</div>';
 			}
 			else {
 				$update_message = '';

@@ -286,7 +286,7 @@ function woothemes_seo_page(){
     ?>
     <div id="woo-popup-save" class="woo-save-popup"><div class="woo-save-save">Options Updated</div></div>
     <div id="woo-popup-reset" class="woo-save-popup"><div class="woo-save-reset">Options Reset</div></div>
-        <form action="" enctype="multipart/form-data" id="wooform">
+        <form action="" enctype="multipart/form-data" id="wooform" method="post">
         <?php
 	    	// Add nonce for added security.
 	    	if ( function_exists( 'wp_nonce_field' ) ) { wp_nonce_field( 'wooframework-seo-options-update' ); } // End IF Statement
@@ -342,6 +342,7 @@ function woothemes_seo_page(){
             </div>
             <div class="save_bar_top">
             <img style="display:none" src="<?php echo get_template_directory_uri(); ?>/functions/images/loading-bottom.gif" class="ajax-loading-img ajax-loading-img-bottom" alt="Working..." />
+            <input type="hidden" name="woo_save" value="save" />
             <input type="submit" value="Save All Changes" class="button submit-button" />
             </form>
 
@@ -363,15 +364,12 @@ function woothemes_seo_page(){
 		    	} // End IF Statement
 		    ?>
             <span class="submit-footer-reset">
-            <input name="reset" type="submit" value="Reset Options" class="button submit-button reset-button" onclick="return confirm( 'Click OK to reset. Any settings will be lost!' );" />
+            <input name="reset" type="submit" value="Reset All SEO Options" class="button submit-button reset-button" onclick="return confirm( 'Click OK to reset all SEO options. All settings will be lost!' );" />
             <input type="hidden" name="woo_save" value="reset" />
             </span>
         	</form>
 
-
             </div>
-
-
 
     <div style="clear:both;"></div>
     </div><!--wrap-->
