@@ -1,0 +1,16 @@
+.nav li.sfHover,
+#tabs ul.wooTabs li a.selected, #tabs ul.wooTabs li a:hover, 
+.nav a:hover, 
+.nav li.current_page_item a, 
+.nav li.current_page_parent a,
+.nav li.current-menu-ancestor a,
+.nav li.current-menu-item a,
+.nav li.sfHover {
+    background: #d1ff61;
+}
+
+#footer-widgets .block a,
+#slides_container .slide .featured-category a,
+#slide-nav li a span.info .featured-category { color: #cdff61; }
+
+#tabs ul.wooTabs li a.selected, #tabs ul.wooTabs li a:hover { color:#799e09; border-color: #799e09; }

@@ -1,0 +1,41 @@
+*** Delicious Magazine Changelog ***
+
+2011.08.19 - version 1.0.10
+ * style.css - Fixed IE navigation (line 242)
+
+2011.08.17 - version 1.0.9
+ * includes/theme-options.php, 
+   single.php,
+   style.css - added single post ad option
+
+2011.08.05 - version 1.0.8
+ * includes/theme-options.php, 
+   includes/theme-actions.php - updated slider speed options
+
+2011.07.20 - version 1.0.7
+ * style.css - Update slider styling for IE8
+
+2011.07.05 - version 1.0.6
+ * single.php - added embed output
+ * style.css - added .post .video
+
+2011.05.16 - version 1.0.5
+ * header.php - fixed Home link highlight issue 
+
+2011.05.09 - version 1.0.4
+ * includes/theme-options.php - removed randomize slides option as it doesn't work properly
+ * includes/theme-actions.php - removed randomize on slides 
+
+2011.03.04 - version 1.0.3
+ * style.css - Fixed slider caption positioning in IE7
+ * images/ie7transparency.png - Added image for IE transparency
+
+2011.02.28 - version 1.0.2
+ * index.php, includes/theme-options.php - added two column layout for homepage posts
+ * style.css - added two columns styling #latest.post
+
+2011.02.23 - version 1.0.1
+ * includes/theme-actions.php - fixed color on post titles custom typography
+	
+2010.02.22 - version 1.0
+ * First release!
