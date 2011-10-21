@@ -156,7 +156,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 #navigation ul.rss li a{color:#c63f00;text-decoration:none;}
 #navigation ul.rss li a:hover{text-decoration:underline;}
 
-.nav { z-index:99; margin:0; padding:0; list-style:none; line-height:1; border: solid #D6D7D7; border-width: 0 0 0 1px; max-width:700px; }
+.nav { z-index:99; margin:0; padding:0; list-style:none; line-height:1; border: solid #D6D7D7; border-width: 0 0 0 1px; }
 .nav a  { position:relative; color:#060606; display:block; z-index:100; padding: 70px 20px 15px 20px; line-height:18px; text-decoration:none; text-shadow:0 1px 0 rgba(255,255,255,0.8); min-width: 60px; font-size: 16px; font-weight: bold; border:1px solid #D6D7D7; border-width: 0 1px 0 0; }
 .nav a:hover, 
 .nav li.current_page_item a, 
