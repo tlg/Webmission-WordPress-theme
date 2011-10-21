@@ -18,7 +18,7 @@
 				<?php
 	   				// Exclude featured posts
 	   				global $shownposts; 
-	   				if ( get_option( 'woo_exclude' ) != $shownposts AND !is_paged ) 
+	   				if ( get_option( 'woo_exclude' ) != $shownposts AND !is_paged() ) 
 	   					update_option( 'woo_exclude', $shownposts ); 
 					
 					if ( is_paged() )
