@@ -196,7 +196,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	.nav li li li li:hover ul, .nav li li li li.sfhover ul  { left:auto; }
 	
 	.nav .sf-sub-indicator {background:	url(images/arrow-superfish.png) no-repeat;position:absolute;display:block;right:1em;bottom:20px;width:12px;height:12px;text-indent:-999em;overflow:hidden;}
-	.nav li ul .sf-sub-indicator {background:url(images/arrow-superfish-right.png) no-repeat;}
+	.nav li ul .sf-sub-indicator {background:url(images/arrow-superfish-right.png) no-repeat; height: 6px;}
 
 	/* 2.2.2 Top Navigation (optional) */
 	#top { background: #000; }
