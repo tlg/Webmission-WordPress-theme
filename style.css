@@ -241,7 +241,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 /* 2.3 Header */
 #header{clear:both;position:relative;border-bottom:4px solid #060606;z-index: 9999;}
 
-#logo  { padding: 20px 0 0 20px; margin-right: 64px; }
+#logo  { padding: 41px 0 0 0px; margin-right: 64px; }
 #logo img  { }
 #logo .site-title, #logo .site-description  { font-family:Georgia, serif; color: #000; display:none;  }
 #logo .site-title a { color:#222; font-size:40px; line-height:40px; text-transform:none; font-weight:normal; text-decoration:none; }
