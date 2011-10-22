@@ -269,6 +269,20 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 #footer #credit span{display:none;}
 #footer #copyright span { font:bold 14px "PT Sans", serif; color:#ddd; margin-right:5px; } 
 
+#footer ul.share { overflow: hidden; list-style: none; width: 900px; margin: 0; padding: 0 20px; }
+#footer ul.share li { float: right; }
+#footer ul.share li.icon { float: left; margin: 0 5px 0 0; }
+#footer ul.share li.icon a { overflow: hidden; float: left; width: 27px; height: 27px; background: #ccc url(images/footer-share.png) no-repeat; font-size: 0; text-indent: -10001px; }
+#footer ul.share li.linkedin a { background-position: 0 0; }
+#footer ul.share li.linkedin a:hover, #footer ul.share li.linkedin a:focus, #footer ul.share li.linkedin a:active { background-color: #0073a5; } 
+#footer ul.share li.twitter a { background-position: -27px 0; }
+#footer ul.share li.twitter a:hover, #footer ul.share li.twitter a:focus, #footer ul.share li.twitter a:active { background-color: #3dc7f4; } 
+#footer ul.share li.facebook a { background-position: -54px 0; }
+#footer ul.share li.facebook a:hover, #footer ul.share li.facebook a:focus, #footer ul.share li.facebook a:active { background-color: #3b5998; }
+#footer ul.share li.flickr a { background-position: -81px 0; }
+#footer ul.share li.flickr a:hover, #footer ul.share li.flickr a:focus, #footer ul.share li.flickr a:active { background-color: #fff; background-position: -108px 0; } 
+
+
 
 /* 2.7 Homepage */
 #main h3.section { background: url(images/strips.png) repeat; padding:10px 15px; line-height:1em; font-weight: bold; margin-bottom: 25px; }

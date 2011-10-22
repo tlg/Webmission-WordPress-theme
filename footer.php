@@ -2,6 +2,8 @@
 
 	<div id="footer-out">
 		
+		
+		
 		<?php 
 			$total = $woo_options['woo_footer_sidebars']; if (!isset($total)) $total = 4;				   
 			if ( ( woo_active_sidebar('footer-1') ||
@@ -10,6 +12,7 @@
 				   woo_active_sidebar('footer-4') ) && $total > 0 ) : 
 			
 	  	?>
+	
 		
 		<div id="footer-widgets" class="col-full col-<?php echo $total; ?>">
 	
