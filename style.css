@@ -282,6 +282,9 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 #footer ul.share li.flickr a { background-position: -81px 0; }
 #footer ul.share li.flickr a:hover, #footer ul.share li.flickr a:focus, #footer ul.share li.flickr a:active { background-color: #fff; background-position: -108px 0; } 
 
+#footer ul.share li.meetup a { background-position: -135px 0; }
+#footer ul.share li.meetup a:hover, #footer ul.share li.meetup a:focus, #footer ul.share li.meetup a:active { background-color: rgb(197,41,55); }
+
 
 
 /* 2.7 Homepage */
