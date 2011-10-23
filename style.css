@@ -197,6 +197,55 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	
 	.nav .sf-sub-indicator {background:	url(images/arrow-superfish.png) no-repeat;position:absolute;display:block;right:1em;bottom:20px;width:12px;height:12px;text-indent:-999em;overflow:hidden;}
 	.nav li ul .sf-sub-indicator {background:url(images/arrow-superfish-right.png) no-repeat; bottom: 6px;}
+	
+	
+	/* 2.2.1 Drop-down menus */
+	#main.subnav {padding: 0;}
+	#subnav { background: #000; width: 652px; margin-bottom: 30px; }
+	#subnav::after {
+		content: ".";
+		display: block;
+		height: 0;
+		clear: both;
+		visibility: hidden;
+	}
+	#subnav .nav { border:none; }
+	#subnav .nav a { min-width:0;font-size:12px; border:none; color:#ddd; padding:8px 10px; line-height:18px; text-decoration:none; text-shadow:none; }
+	#subnav .nav li  {  }
+	#subnav .nav .sf-sub-indicator { display:none; }
+	
+	#subnav .nav a:hover, 
+	#subnav .nav li.current_page_item a, 
+	#subnav .nav li.current_page_parent a,
+	#subnav .nav li.current-menu-ancestor a,
+	#subnav .nav li.current-cat a,
+	#subnav .nav li.current-menu-item a,
+	#subnav .nav li.sfHover { background: #222; }
+	
+	#subnav .nav li ul  { background: #222; margin:0; padding:0px; width: 180px; border: none; z-index:999;
+		/* Box Shadow */
+		-moz-box-shadow: 0 2px 2px rgba(0,0,0,.1);
+		-webkit-box-shadow: 0 2px 2px rgba(0,0,0,.1);
+		box-shadow: 0 2px 2px rgba(0,0,0,.1);
+	}
+	#subnav .nav li ul, #subnav .nav li ul li:last-child a {
+		/* Border Radius */
+		border-radius: 0 0 4px 4px; -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; 
+	}
+	#subnav .nav li ul li { border:none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+	#subnav .nav li ul li a  { border:none; padding:8px 10px; width:160px; color:#ddd; background: none;}
+	#subnav .nav li ul li a:hover  { background: #000 !important; }
+	#subnav .nav li ul li a.sf-with-ul { padding-right:10px; }
+	#subnav .nav li ul ul  { margin: -34px 0 0 180px; }
+	
+	#subnav .nav li:hover, #subnav .nav li.hover  { position:static; }
+	#subnav .nav li:hover ul ul, #subnav .nav li.sfhover ul ul,
+	#subnav .nav li:hover ul ul ul, #subnav .nav li.sfhover ul ul ul,
+	#subnav .nav li:hover ul ul ul ul, #subnav .nav li.sfhover ul ul ul ul { left:-999em; }
+	#subnav .nav li:hover ul, #subnav .nav li.sfhover ul,
+	#subnav .nav li li:hover ul, #subnav .nav li li.sfhover ul,
+	#subnav .nav li li li:hover ul, #subnav .nav li li li.sfhover ul,
+	#subnav .nav li li li li:hover ul, #subnav .nav li li li li.sfhover ul  { left:auto; }
 
 	/* 2.2.2 Top Navigation (optional) */
 	#top { background: #000; }

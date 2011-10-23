@@ -10,7 +10,7 @@
             <?php while (have_posts()) : the_post(); $count++; ?>
                                                                         
                 <div class="post">
-
+					
                     <h1 class="title"><?php the_title(); ?></h1>
 
                     <div class="entry">
