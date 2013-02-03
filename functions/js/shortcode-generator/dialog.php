@@ -1,4 +1,6 @@
-<?php 
+<?php
+if ( ! isset( $_GET['woo-shortcodes-nonce'] ) || ( $_GET['woo-shortcodes-nonce'] == '' ) ) die( 'Security check' );
+
 // Get the path to the root.
 $full_path = __FILE__;
 
@@ -8,7 +10,11 @@ $url = $path_bits[0];
 
 // Require WordPress bootstrap.
 require_once( $url . '/wp-load.php' );
-                                   
+
+// Nonce security check.    
+$nonce = $_GET['woo-shortcodes-nonce'];
+if ( ! wp_verify_nonce( $nonce, 'wooframework-shortcode-generator' ) ) die( 'Security check' );
+
 $woo_framework_version = get_option( 'woo_framework_version' );
 
 $MIN_VERSION = '2.9';
@@ -22,7 +28,6 @@ $woo_framework_url = get_template_directory_uri() . '/functions/';
 $woo_shortcode_css = $woo_framework_path . 'css/shortcodes.css';
                                   
 $isWooTheme = file_exists($woo_shortcode_css);
-
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -31,7 +36,6 @@ $isWooTheme = file_exists($woo_shortcode_css);
 <div id="woo-dialog">
 
 <?php if ( $meetsMinVersion && $isWooTheme ) { ?>
-
 <div id="woo-options-buttons" class="clear">
 	<div class="alignleft">
 	
@@ -39,10 +43,7 @@ $isWooTheme = file_exists($woo_shortcode_css);
 	    
 	</div>
 	<div class="alignright">
-	
-	    <input type="button" id="woo-btn-preview" class="button" name="preview" value="Preview" accesskey="P" />
-	    <input type="button" id="woo-btn-insert" class="button-primary" name="insert" value="Insert" accesskey="I" />
-	    
+	    <input type="button" id="woo-btn-insert" class="button-primary" name="insert" value="Insert" accesskey="I" />  
 	</div>
 	<div class="clear"></div><!--/.clear-->
 </div><!--/#woo-options-buttons .clear-->
@@ -54,19 +55,11 @@ $isWooTheme = file_exists($woo_shortcode_css);
 	</table>
 
 </div>
-
-<div id="woo-preview" class="alignleft">
-
-    <h3><?php echo __( 'Preview', 'woothemes' ); ?></h3>
-
-    <iframe id="woo-preview-iframe" frameborder="0" style="width:100%;height:250px" scrolling="no"></iframe>   
-    
-</div>
 <div class="clear"></div>
 
 
-<script type="text/javascript" src="<?php echo $woo_framework_url; ?>js/shortcode-generator/js/column-control.js"></script>
-<script type="text/javascript" src="<?php echo $woo_framework_url; ?>js/shortcode-generator/js/tab-control.js"></script>
+<script type="text/javascript" src="<?php echo esc_url( $woo_framework_url . 'js/shortcode-generator/js/column-control.js' ); ?>"></script>
+<script type="text/javascript" src="<?php echo esc_url( $woo_framework_url . 'js/shortcode-generator/js/tab-control.js' ); ?>"></script>
 <?php  }  else { ?>
 
 <div id="woo-options-error">
@@ -102,9 +95,7 @@ $isWooTheme = file_exists($woo_shortcode_css);
 
 <?php  } ?>
 
-<script type="text/javascript" src="<?php echo $woo_framework_url; ?>js/shortcode-generator/js/dialog-js.php"></script>
-
+<script type="text/javascript" src="<?php echo esc_url( $woo_framework_url . 'js/shortcode-generator/js/dialog-js.php' ); ?>"></script>
 </div>
-
 </body>
 </html>

@@ -55,14 +55,14 @@ if(isset($_POST['submitted'])) {
 			$subject = __('Contact Form Submission from ', 'woothemes').$name;
 			$sendCopy = trim($_POST['sendCopy']);
 			$body = __("Name: $name \n\nEmail: $email \n\nComments: $comments", 'woothemes');
-			$headers = __('From: ', 'woothemes') .' <'.$email.'>' . "\r\n" . __('Reply-To: ','woothemes') . $email;
+			$headers = __( 'From: ', 'woothemes') . "$name <$email>" . "\r\n" . __( 'Reply-To: ', 'woothemes' ) . $email;
 
 			//Modified 2010-04-29 (fox)
 			wp_mail($emailTo, $subject, $body, $headers);
 
 			if($sendCopy == true) {
 				$subject = __('You emailed ', 'woothemes').get_bloginfo('title');
-				$headers = __('From: ','woothemes') . '<'.$emailTo.'>';
+				$headers = __( 'From: ', 'woothemes' ) . "$name <$emailTo>";
 				wp_mail($email, $subject, $body, $headers);
 			}
 
@@ -115,7 +115,11 @@ jQuery(document).ready(function() {
 
     <div id="content" class="col-full">
 		<div id="main" class="col-left">
-			<?php if ( function_exists('yoast_breadcrumb') ) { yoast_breadcrumb('<div id="breadcrumb"><p>','</p></div>'); } ?>
+				<?php if ( isset( $woo_options['woo_breadcrumbs_show'] ) && $woo_options['woo_breadcrumbs_show'] == 'true' ) { ?>
+				<div id="breadcrumb">
+					<?php woo_breadcrumbs(); ?>
+				</div><!--/#breadcrumbs -->
+			<?php } ?>
             <div id="contact-page" class="post">
                 
             <?php if(isset($emailSent) && $emailSent == true) { ?>

@@ -51,9 +51,47 @@
  */
  
  	load_first_tab: function () {
- 		$( '.group').hide();
-		$( '.group:first' ).fadeIn();
+ 		$( '.group' ).hide();
+ 		$( '.group:has(".section"):first' ).fadeIn(); // Fade in the first tab containing options (not just the first tab).
  	}, // End load_first_tab()
+ 	
+/**
+ * open_first_menu()
+ *
+ * @since 5.0.0
+ */
+ 
+ 	open_first_menu: function () {
+ 		$( '#woo-nav li.current.has-children:first ul.sub-menu' ).slideDown().addClass( 'open' ).children( 'li:first' ).addClass( 'active' ).parents( 'li.has-children' ).addClass( 'open' );
+ 	}, // End open_first_menu()
+ 	
+/**
+ * toggle_nav_menus()
+ *
+ * @since 5.0.0
+ */
+ 
+ 	toggle_nav_menus: function () {
+ 		$( '#woo-nav li.has-children > a' ).click( function ( e ) {
+ 			if ( $( this ).parent().hasClass( 'open' ) ) { return false; }
+ 			
+ 			$( '#woo-nav li.top-level' ).removeClass( 'open' ).removeClass( 'current' );
+ 			$( '#woo-nav li.active' ).removeClass( 'active' );
+ 			if ( $( this ).parents( '.top-level' ).hasClass( 'open' ) ) {} else {
+ 				$( '#woo-nav .sub-menu.open' ).removeClass( 'open' ).slideUp().parent().removeClass( 'current' );
+ 				$( this ).parent().addClass( 'open' ).addClass( 'current' ).find( '.sub-menu' ).slideDown().addClass( 'open' ).children( 'li:first' ).addClass( 'active' );
+ 			}
+ 			
+ 			// Find the first child with sections and display it.
+ 			var clickedGroup = $( this ).parent().find( '.sub-menu li a:first' ).attr( 'href' );
+ 			
+ 			if ( clickedGroup != '' ) {
+ 				$( '.group' ).hide();
+ 				$( clickedGroup ).fadeIn();
+ 			}
+ 			return false;
+ 		});
+ 	}, // End toggle_nav_menus()
  	
 /**
  * toggle_collapsed_fields()
@@ -85,17 +123,66 @@
  */
  
  	setup_nav_highlights: function () {
-	 	$( '#woo-nav li:first' ).addClass( 'current' );
-		$( '#woo-nav li a' ).click( function( evt ) {
-			$( '#woo-nav li' ).removeClass( 'current' );
-			$( this ).parent().addClass( 'current' );
+	 	// Highlight the first item by default.
+	 	$( '#woo-nav li.top-level:first' ).addClass( 'current' ).addClass( 'open' );
 		
-			var clicked_group = $( this ).attr( 'href' );
+		// Default single-level logic.
+		$( '#woo-nav li.top-level' ).not( '.has-children' ).find( 'a' ).click( function ( e ) {
+			var thisObj = $( this );
+			var clickedGroup = thisObj.attr( 'href' );
+			
+			if ( clickedGroup != '' ) {
+				$( '#woo-nav .open' ).removeClass( 'open' );
+				$( '.sub-menu' ).slideUp();
+				$( '#woo-nav .active' ).removeClass( 'active' );
+				$( '#woo-nav li.current' ).removeClass( 'current' );
+				thisObj.parent().addClass( 'current' );
+				
+				$( '.group' ).hide();
+				$( clickedGroup ).fadeIn();
+				
+				return false;
+			}
+		});
+		
+		$( '#woo-nav li:not(".has-children") > a:first' ).click( function( evt ) {
+			var parentObj = $( this ).parent( 'li' );
+			var thisObj = $( this );
+			
+			var clickedGroup = thisObj.attr( 'href' );
+			
+			if ( $( this ).parents( '.top-level' ).hasClass( 'open' ) ) {} else {
+				$( '#woo-nav li.top-level' ).removeClass( 'current' ).removeClass( 'open' );
+				$( '#woo-nav .sub-menu' ).removeClass( 'open' ).slideUp();
+				$( this ).parents( 'li.top-level' ).addClass( 'current' );
+			}
 		
 			$( '.group' ).hide();
-			$( clicked_group ).fadeIn();
+			$( clickedGroup ).fadeIn();
 		
 			evt.preventDefault();
+			return false;
+		});
+		
+		// Sub-menu link click logic.
+		$( '.sub-menu a' ).click( function ( e ) {
+			var thisObj = $( this );
+			var parentMenu = $( this ).parents( 'li.top-level' );
+			var clickedGroup = thisObj.attr( 'href' );
+			
+			if ( $( '.sub-menu li a[href="' + clickedGroup + '"]' ).hasClass( 'active' ) ) {
+				return false;
+			}
+			
+			if ( clickedGroup != '' ) {
+				parentMenu.addClass( 'open' );
+				$( '.sub-menu li, .flyout-menu li' ).removeClass( 'active' );
+				$( this ).parent().addClass( 'active' );
+				$( '.group' ).hide();
+				$( clickedGroup ).fadeIn();
+			}
+			
+			return false;
 		});
  	}, // End setup_nav_highlights()
 
@@ -111,18 +198,114 @@
 			var parent = $( this ).parent();
 			var name = parent.find( '.woo-typography-size-px' ).attr( 'name' );
 			if( name == '' ) { var name = parent.find( '.woo-typography-size-em' ).attr( 'name' ); }
-		
+			
 			if( val == 'px' ) {
+				var name = parent.find( '.woo-typography-size-em' ).attr( 'name' );
 				parent.find( '.woo-typography-size-em' ).hide().removeAttr( 'name' );
 				parent.find( '.woo-typography-size-px' ).show().attr( 'name', name );
 			}
 			else if( val == 'em' ) {
-				parent.find( '.woo-typography-size-em' ).show().attr( 'name', name );
+				var name = parent.find( '.woo-typography-size-px' ).attr( 'name' );
 				parent.find( '.woo-typography-size-px' ).hide().removeAttr( 'name' );
+				parent.find( '.woo-typography-size-em' ).show().attr( 'name', name );
 			}
 		
 		});
  	}, // End setup_custom_typography()
+
+/**
+ * setup_custom_ui_slider()
+ *
+ * @since 5.3.5
+ */
+ 
+ 	setup_custom_ui_slider: function () {
+
+		$('div.ui-slide').each(function(i){
+
+			if( $(this).attr('min') != undefined && $(this).attr('max') != undefined ) {
+
+				$(this).slider( { 
+								min: parseInt($(this).attr('min')), 
+								max: parseInt($(this).attr('max')), 
+								value: parseInt($(this).next("input").val()),
+								step: parseInt($(this).attr('inc')) ,
+								slide: function( event, ui ) {
+									$( this ).next("input").val(ui.value);
+								}
+							});
+
+				$(this).removeAttr('min').removeAttr('max').removeAttr('inc');
+
+			}
+
+		});
+
+ 	}, // End setup_custom_ui_slider()
+
+/**
+ * init_flyout_menus()
+ *
+ * @since 5.0.0
+ */
+ 
+ 	init_flyout_menus: function () {
+ 		// Only trigger flyouts on menus with closed sub-menus.
+ 		$( '#woo-nav li.has-children' ).each ( function ( i ) {
+ 			$( this ).hover(
+	 			function () {
+	 				if ( $( this ).find( '.flyout-menu' ).length == 0 ) {
+		 				var flyoutContents = $( this ).find( '.sub-menu' ).html();
+		 				var flyoutMenu = $( '<div />' ).addClass( 'flyout-menu' ).html( '<ul>' + flyoutContents + '</ul>' );
+		 				$( this ).append( flyoutMenu );
+	 				}
+	 			}, 
+	 			function () {
+	 				// $( '#woo-nav .flyout-menu' ).remove();
+	 			}
+	 		);
+ 		});
+ 		
+ 		// Add custom link click logic to the flyout menus, due to custom logic being required.
+ 		$( '.flyout-menu a' ).live( 'click', function ( e ) {
+ 			var thisObj = $( this );
+ 			var parentObj = $( this ).parent();
+ 			var parentMenu = $( this ).parents( '.top-level' );
+ 			var clickedGroup = $( this ).attr( 'href' );
+ 			
+ 			if ( clickedGroup != '' ) {
+	 			$( '.group' ).hide();
+	 			$( clickedGroup ).fadeIn();
+	 			
+	 			// Adjust the main navigation menu.
+	 			$( '#woo-nav li' ).removeClass( 'open' ).removeClass( 'current' ).find( '.sub-menu' ).slideUp().removeClass( 'open' );
+	 			parentMenu.addClass( 'open' ).addClass( 'current' ).find( '.sub-menu' ).slideDown().addClass( 'open' );
+	 			$( '#woo-nav li.active' ).removeClass( 'active' );
+	 			$( '#woo-nav a[href="' + clickedGroup + '"]' ).parent().addClass( 'active' );
+ 			}
+ 			
+ 			return false;
+ 		});
+ 	}, // End init_flyout_menus()
+
+/**
+ * banner_advert_close()
+ *
+ * @since 5.3.4
+ */
+
+	banner_advert_close: function () {
+		$( '.wooframework-banner' ).each( function ( i ) {
+			if ( $( this ).find( '.close-banner a' ).length ) {
+				$( this ).find( '.close-banner a' ).click( function ( e ) {
+					var answer = confirm( 'Are you sure you\'d like to close this banner?' + "\n" + 'Before closing this banner, make sure you have saved your theme options.' );
+					if ( answer ) {} else {
+						return false;
+					}
+				});
+			}
+		});
+	},  // End banner_advert_close()
 
 /**
  * unhide_hidden()
@@ -160,7 +343,12 @@
 		woothemesAdminInterface.load_first_tab();
 		woothemesAdminInterface.toggle_collapsed_fields();
 		woothemesAdminInterface.setup_nav_highlights();
+		woothemesAdminInterface.toggle_nav_menus();
+		woothemesAdminInterface.init_flyout_menus();
+		woothemesAdminInterface.open_first_menu();
+		woothemesAdminInterface.banner_advert_close();
 		woothemesAdminInterface.setup_custom_typography();
+		woothemesAdminInterface.setup_custom_ui_slider();
 	
 	});
   

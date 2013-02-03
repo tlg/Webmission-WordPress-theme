@@ -1,4 +1,8 @@
 <?php
+// File Security Check
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+<?php
 /*-----------------------------------------------------------------------------------*/
 /* WooThemes Media Library-driven AJAX File Uploader Module */
 /* 2010-11-05. */

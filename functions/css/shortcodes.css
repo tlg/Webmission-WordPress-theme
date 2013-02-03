@@ -248,9 +248,11 @@ a.woo-sc-button.silver:hover {
 .sixcol-three{width:47.99%;}
 .sixcol-four{width:65.33%;}
 .sixcol-five{width:82.67%;}
-.twocol-one,.threecol-one,.threecol-two,.fourcol-one,.fourcol-two,.fourcol-three,.fivecol-one,.fivecol-two,.fivecol-three,.fivecol-four,.sixcol-one,.sixcol-two,.sixcol-three,.sixcol-four,.sixcol-five{float:left;margin-right:4%;position:relative;}
+.twocol-one,.threecol-one,.threecol-two,.fourcol-one,.fourcol-two,.fourcol-three,.fivecol-one,.fivecol-two,.fivecol-three,.fivecol-four,.sixcol-one,.sixcol-two,.sixcol-three,.sixcol-four,.sixcol-five{float:left;margin-right:4%;margin-bottom:4%;position:relative;}
 .last{clear:right;margin-right:0 !important;}
-
+@media only screen and (max-width: 768px) {
+	.twocol-one,.threecol-one,.threecol-two,.fourcol-one,.fourcol-two,.fourcol-three,.fivecol-one,.fivecol-two,.fivecol-three,.fivecol-four,.sixcol-one,.sixcol-two,.sixcol-three,.sixcol-four,.sixcol-five{margin-right: 0; width: 100% !important;}
+}
 
 /*-------------------------------------------------------------------------------------------*/
 /* 4. Tweetmeme */
@@ -456,7 +458,7 @@ a.woo-sc-button.silver:hover {
 			border-top-left-radius: 0px;
 			border-top-right-radius: 0px;
 			-moz-border-radius-topright: 0px;
-			-moz-border-radius-topkeft: 0px;
+			-moz-border-radius-topleft: 0px;
 			-webkit-border-top-left-radius: 0px;
 			-webkit-border-top-right-radius: 0px;
 		

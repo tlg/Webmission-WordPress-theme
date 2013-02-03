@@ -8,6 +8,9 @@
 $functions_path = TEMPLATEPATH . '/functions/';
 $includes_path = TEMPLATEPATH . '/includes/';
 
+// Define the theme-specific key to be sent to PressTrends.
+define( 'WOO_PRESSTRENDS_THEMEKEY', 'z29j6z4nphp8k4ccjwagq8mjp0m7hckoy' );
+
 // WooFramework
 require_once ($functions_path . 'admin-init.php');			// Framework Init
 

@@ -49,7 +49,7 @@ if (!function_exists('woo_pagenav')) {
 if (!function_exists('woo_tabs_popular')) {
 	function woo_tabs_popular( $posts = 5, $size = 35 ) {
 		global $post;
-		$popular = get_posts('caller_get_posts=1&orderby=comment_count&showposts='.$posts);
+		$popular = get_posts('ignore_sticky_posts=1&orderby=comment_count&showposts=' . $posts . '&suppress_filters=0' );
 		foreach($popular as $post) :
 			setup_postdata($post);
 	?>
@@ -70,7 +70,7 @@ if (!function_exists('woo_tabs_popular')) {
 if (!function_exists('woo_tabs_latest')) {
 	function woo_tabs_latest( $posts = 5, $size = 35 ) {
 		global $post;
-		$latest = get_posts('caller_get_posts=1&showposts='. $posts .'&orderby=post_date&order=desc');
+		$latest = get_posts('ignore_sticky_posts=1&showposts='. $posts .'&orderby=post_date&order=desc&suppress_filters=0');
 		foreach($latest as $post) :
 			setup_postdata($post);
 	?>
@@ -205,7 +205,10 @@ if (!function_exists('woo_subscribe_connect')) {
 		   		<a href="<?php echo $woo_options['woo_connect_linkedin']; ?>" class="linkedin"><img src="<?php echo get_template_directory_uri(); ?>/images/ico-social-linkedin.png" title="<?php _e('Connect on LinkedIn', 'woothemes'); ?>" alt=""/></a>
 		   		
 		   		<?php } if ( $woo_options['woo_connect_delicious'] != "" ) { ?>
-		   		<a href="<?php echo $woo_options['woo_connect_delicious']; ?>" class="delicious"><img src="<?php echo get_template_directory_uri(); ?>/images/ico-social-delicious.png" title="<?php _e('Discover on Delicious', 'woothemes'); ?>" alt=""/></a>						
+		   		<a href="<?php echo $woo_options['woo_connect_delicious']; ?>" class="delicious"><img src="<?php echo get_template_directory_uri(); ?>/images/ico-social-delicious.png" title="<?php _e('Discover on Delicious', 'woothemes'); ?>" alt=""/></a>	
+		   		
+		   			<?php } if ( $woo_options[ 'woo_connect_googleplus' ] != "" ) { ?>
+		   		<a href="<?php echo esc_url( $woo_options['woo_connect_googleplus'] ); ?>" class="googleplus"><img src="<?php echo get_template_directory_uri(); ?>/images/ico-social-googleplus.png" title="<?php _e('View Google+ profile', 'woothemes'); ?>" alt=""/></a>					
 				
 				<?php } ?>
 			</div>

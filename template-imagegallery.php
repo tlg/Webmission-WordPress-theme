@@ -9,7 +9,11 @@ Template Name: Image Gallery
     <div id="content" class="page col-full">
 		<div id="main" class="col-left">
                                                                             
-			<?php if ( function_exists('yoast_breadcrumb') ) { yoast_breadcrumb('<div id="breadcrumb"><p>','</p></div>'); } ?>
+				<?php if ( isset( $woo_options['woo_breadcrumbs_show'] ) && $woo_options['woo_breadcrumbs_show'] == 'true' ) { ?>
+				<div id="breadcrumb">
+					<?php woo_breadcrumbs(); ?>
+				</div><!--/#breadcrumbs -->
+			<?php } ?>
             <div class="post">
 
                 <h1 class="title"><?php the_title(); ?></h1>

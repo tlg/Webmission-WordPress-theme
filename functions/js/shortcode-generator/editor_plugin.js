@@ -1,20 +1,3 @@
-function woo_js_querystring(ji) {
-
-	hu = window.location.search.substring(1);
-	gy = hu.split( "&" );
-	for (i=0;i<gy.length;i++) {
-	
-		ft = gy[i].split( "=" );
-		if (ft[0] == ji) {
-		
-			return ft[1];
-		
-		} // End IF Statement
-		
-	} // End FOR Loop
-	
-} // End woo_js_querystring()
-	
 (
 	
 	function(){
@@ -48,15 +31,21 @@ function woo_js_querystring(ji) {
 		var framework_url = src.split( '/js/' );
 		
 		var icon_url = framework_url[0] + '/images/shortcode-icon.png';
-	
+
 		tinymce.create(
 			"tinymce.plugins.WooThemesShortcodes",
 			{
 				init: function(d,e) {
+						var nonce = '';
+						if ( nonce == '' ) {
+							jQuery.post( ajaxurl, { 'action' : 'woo_shortcodes_nonce' }, function ( response ) {
+								nonce = response;
+							});
+						}
+
 						d.addCommand( "wooVisitWooThemes", function(){ window.open( "http://woothemes.com/" ) } );
 						
 						d.addCommand( "wooOpenDialog",function(a,c){
-							
 							// Grab the selected text from the content editor.
 							selectedText = '';
 						
@@ -68,12 +57,10 @@ function woo_js_querystring(ji) {
 							
 							wooSelectedShortcodeType = c.identifier;
 							wooSelectedShortcodeTitle = c.title;
-							
-							
-							jQuery.get(e+"/dialog.php",function(b){
+
+							jQuery.get(e+"/dialog.php?woo-shortcodes-nonce=" + nonce,function(b){
 								
-								jQuery( '#woo-options').addClass( 'shortcode-' + wooSelectedShortcodeType );
-								jQuery( '#woo-preview').addClass( 'shortcode-' + wooSelectedShortcodeType );
+								jQuery( '#woo-options' ).addClass( 'shortcode-' + wooSelectedShortcodeType );
 								
 								// Skip the popup on certain shortcodes.
 								
@@ -172,6 +159,8 @@ function woo_js_querystring(ji) {
 											a.addWithDialog(c,"Share on Facebook","fbshare" );
 											a.addWithDialog(c,"Share on LinkedIn","linkedin_share" );
 											a.addWithDialog(c,"Google +1 Button","google_plusone" );
+											a.addWithDialog(c,"StumbleUpon Badge","stumbleupon" );
+											a.addWithDialog(c,"Pinterest Pin It Button","pinterest" );
 		/*b.add({title:"Visit WooThemes.com","class":"woo-woolink",onclick:function(){tinyMCE.activeEditor.execCommand( "wooVisitWooThemes",false,"")}})*/ });
 							return d
 						

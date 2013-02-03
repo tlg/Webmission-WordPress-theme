@@ -13,7 +13,11 @@ Template Name: Blog
         <!-- #main Starts -->
         <div id="main" class="col-left">      
                     
-		<?php if ( function_exists('yoast_breadcrumb') ) { yoast_breadcrumb('<div id="breadcrumb"><p>','</p></div>'); } ?>
+			<?php if ( isset( $woo_options['woo_breadcrumbs_show'] ) && $woo_options['woo_breadcrumbs_show'] == 'true' ) { ?>
+				<div id="breadcrumb">
+					<?php woo_breadcrumbs(); ?>
+				</div><!--/#breadcrumbs -->
+			<?php } ?>
 
         <?php if ( get_query_var('paged') ) $paged = get_query_var('paged'); elseif ( get_query_var('page') ) $paged = get_query_var('page'); else $paged = 1; ?>
         <?php query_posts("post_type=post&paged=$paged"); ?>

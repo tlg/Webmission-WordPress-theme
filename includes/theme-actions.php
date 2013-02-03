@@ -154,13 +154,13 @@ function woo_slider_options() {
 	
 	global $woo_options;
 	
-	if ($woo_options['woo_featured'] == 'true' && is_home() && !is_paged()): ?>
+	if ($woo_options['woo_featured'] == 'true' && ( is_home() or is_front_page() ) && !is_paged()): ?>
 		
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
 				jQuery('#slides').slides({
 					crossfade: true,
-					preload: true,
+					preload: false,
 					effect: '<?php echo $woo_options['woo_slider_effect']; ?>',				
 					<?php if ($woo_options['woo_slider_auto'] == "true"): ?>
 					play: <?php echo $woo_options['woo_slider_interval'] * 1000; ?>,

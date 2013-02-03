@@ -1,4 +1,8 @@
 <?php
+// File Security Check
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+<?php
 /**
  * WooThemes Theme Options Backup
  *
@@ -10,39 +14,36 @@
  *
  * @package WooFramework
  * @subpackage Module
+ *
+ * TABLE OF CONTENTS
+ *
+ * - var $admin_page
+ * - var $token
  * 
- *-----------------------------------------------------------------------------------
-
- TABLE OF CONTENTS
-
- - var $admin_page
- - var $token
- 
- - function WooThemes_Backup () (Constructor)
- - function init ()
- - function register_admin_screen ()
- - function admin_screen ()
- - function admin_screen_help ()
- - function admin_screen_logic ()
- - function move_admin_menu ()
- - function import ()
- - function export ()
- - function add_to_export_query ()
- - function add_single_to_export_query ()
- - function construct_database_query ()
-
- - Create $woo_backup Object
------------------------------------------------------------------------------------*/
+ * - function __construct ()
+ * - function init ()
+ * - function register_admin_screen ()
+ * - function admin_screen ()
+ * - function admin_screen_help ()
+ * - function admin_screen_logic ()
+ * - function move_admin_menu ()
+ * - function import ()
+ * - function export ()
+ * - function add_to_export_query ()
+ * - function add_single_to_export_query ()
+ * - function construct_database_query ()
+ *
+ * - Create $woo_backup Object
+ */
 
 class WooThemes_Backup {
+	private $admin_page;
+	private $token;
 	
-	var $admin_page;
-	var $token;
-	
-	function WooThemes_Backup () {
+	public function __construct () {
 		$this->admin_page = '';
 		$this->token = 'woothemes-backup';
-	} // End Constructor
+	} // End __construct()
 	
 	/**
 	 * init()
@@ -52,7 +53,7 @@ class WooThemes_Backup {
 	 * @since 1.0.0
 	 */
 	
-	function init () {
+	public function init () {
 		if ( is_admin() && ( get_option( 'framework_woo_backupmenu_disable' ) != 'true' ) ) {
 			// Register the admin screen.
 			add_action( 'admin_menu', array( &$this, 'register_admin_screen' ), 20 );
@@ -68,7 +69,7 @@ class WooThemes_Backup {
 	 * @since 1.0.0
 	 */
 	
-	function register_admin_screen () {
+	public function register_admin_screen () {
 			
 		$this->admin_page = add_submenu_page('woothemes', __( 'WooThemes Settings Backup', 'woothemes' ), __( 'Backup Settings', 'woothemes' ), 'manage_options', $this->token, array( &$this, 'admin_screen' ) );
 			
@@ -90,7 +91,7 @@ class WooThemes_Backup {
 	 * @since 1.0.0
 	 */
 	
-	function admin_screen () {
+	public function admin_screen () {
 	
 		$export_type = 'all';
 		
@@ -127,11 +128,6 @@ class WooThemes_Backup {
 <span class="description"><?php _e( 'This will contain all of the options listed below.', 'woothemes' ); ?></span></p>
 
 			<p><label for="content"><input type="radio" name="export-type" value="theme"<?php checked( 'theme', $export_type ); ?>> <?php _e( 'Theme Options', 'woothemes' ); ?></label></p>
-			
-			<p><label for="content"><input type="radio" name="export-type" value="seo"<?php checked( 'seo', $export_type ); ?>> <?php _e( 'SEO Settings', 'woothemes' ); ?></label></p>
-			
-			<p><label for="content"><input type="radio" name="export-type" value="sidebar"<?php checked( 'sidebar', $export_type ); ?>> <?php _e( 'Sidebar Manager', 'woothemes' ); ?> <span class="description"><?php _e( 'This will contain only the custom sidebars themselves and not the widgets within them', 'woothemes' ); ?></span></label></p>
-			
 			<p><label for="content"><input type="radio" name="export-type" value="framework"<?php checked( 'framework', $export_type ); ?>> <?php _e( 'Framework Settings', 'woothemes' ); ?></label></p>
 			
 			<input type="hidden" name="woothemes-backup-export" value="1" />
@@ -151,7 +147,7 @@ class WooThemes_Backup {
 	 * @since 1.0.0
 	 */
 	
-	function admin_screen_help ( $contextual_help, $screen_id, $screen ) {
+	public function admin_screen_help ( $contextual_help, $screen_id, $screen ) {
 	
 		// $contextual_help .= var_dump($screen); // use this to help determine $screen->id
 		
@@ -167,7 +163,7 @@ class WooThemes_Backup {
 		  '<p><strong>' . __( 'Please note that only valid backup files generated through the WooThemes Backup Manager should be imported.', 'woothemes' ) . '</strong></p>' .
 
 		  '<p><strong>' . __( 'Looking for assistance?', 'woothemes' ) . '</strong></p>' .
-		  '<p>' . sprintf( __( 'Please post your query on the %sWooThemes Support Forums%s where we will do our best to assist you further.', 'woothemes' ), '<a href="http://www.woothemes.com/support=forum/" target="_blank">', '</a>' ) . '</p>';
+		  '<p>' . sprintf( __( 'Please post your query on the %sWooThemes Support Desk%s where we will do our best to assist you further.', 'woothemes' ), '<a href="http://support.woothemes.com/" target="_blank">', '</a>' ) . '</p>';
 		
 		} // End IF Statement
 		
@@ -183,7 +179,7 @@ class WooThemes_Backup {
 	 * @since 1.0.0
 	 */
 	
-	function admin_notices () {
+	public function admin_notices () {
 	
 		if ( ! isset( $_GET['page'] ) || ( $_GET['page'] != $this->token ) ) { return; }
 	
@@ -209,7 +205,7 @@ class WooThemes_Backup {
 	 * @since 1.0.0
 	 */
 	
-	function admin_screen_logic () {
+	public function admin_screen_logic () {
 		
 		if ( ! isset( $_POST['woothemes-backup-export'] ) && isset( $_POST['woothemes-backup-import'] ) && ( $_POST['woothemes-backup-import'] == true ) ) {
 			$this->import();
@@ -229,7 +225,7 @@ class WooThemes_Backup {
 	 * @since 1.0.0
 	 */
 	 
-	function move_admin_menu () {
+	public function move_admin_menu () {
 		global $submenu;
 	
 		if ( ! array_key_exists( 'woothemes', $submenu ) ) { return ; }
@@ -268,7 +264,7 @@ class WooThemes_Backup {
 	 * @since 1.0.0
 	 */
 	 
-	function import() {
+	public function import() {
 		check_admin_referer( 'woothemes-backup-import' ); // Security check.
 		
 		if ( ! isset( $_FILES['woothemes-import-file'] ) ) { return; } // We can't import the settings without a settings file.
@@ -335,11 +331,11 @@ class WooThemes_Backup {
 	 * @uses global $wpdb
 	 */
 	 
-	function export() {
+	public function export() {
 		global $wpdb;
 		check_admin_referer( 'woothemes-backup-export' ); // Security check.
 		
-		$export_options = array( 'all', 'theme', 'seo', 'sidebar', 'framework' );		
+		$export_options = array( 'all', 'theme', 'framework' );		
 		
 		if ( ! in_array( strip_tags( $_POST['export-type'] ), $export_options ) ) { return; } // No invalid exports, please.
 		
@@ -398,7 +394,7 @@ class WooThemes_Backup {
 	 * @return $query array ( string, count )
 	 */
 	 
-	function add_to_export_query ( $options, $count ) {
+	public function add_to_export_query ( $options, $count ) {
 		$query = array();
 		$query_inner = '';
 		
@@ -463,7 +459,7 @@ class WooThemes_Backup {
 	 * @return $query array ( string, count )
 	 */
 	 
-	function add_single_to_export_query ( $option_id, $count ) {
+	public function add_single_to_export_query ( $option_id, $count ) {
 		$query = array();
 		$query_inner = '';
 		
@@ -489,7 +485,7 @@ class WooThemes_Backup {
 	 * @uses global $wpdb
 	 */
 	
-	function construct_database_query ( $export_type ) {
+	public function construct_database_query ( $export_type ) {
 		global $wpdb;
 		
 		$query = '';
@@ -511,25 +507,6 @@ class WooThemes_Backup {
 					$query_inner .= $query['string'];
 					$count = $query['count'];
 				}
-				
-				// SEO Settings
-				$options = get_option( 'woo_seo_template' );
-				
-				if ( is_array( $options ) ) {
-					$query = $this->add_to_export_query( $options, $count );
-					
-					$query_inner .= $query['string'];
-					$count = $query['count'];
-				}
-				
-				// Sidebar Manager
-				
-				$option_id = 'sbm_woo_sbm_options';
-				
-				$query = $this->add_single_to_export_query( $option_id, $count );
-				
-				$query_inner .= $query['string'];
-				$count = $query['count'];
 				
 				// Framework Settings
 				$options = get_option( 'woo_framework_template' );
@@ -560,32 +537,6 @@ class WooThemes_Backup {
 					$query_inner .= $query['string'];
 					$count = $query['count'];
 				}
-			
-			break;
-			
-			// SEO Settings
-			case 'seo':
-			
-				$options = get_option( 'woo_seo_template' );
-				
-				if ( is_array( $options ) ) {
-					$query = $this->add_to_export_query( $options, $count );
-					
-					$query_inner .= $query['string'];
-					$count = $query['count'];
-				}
-			
-			break;
-			
-			// Sidebar Manager
-			case 'sidebar':
-			
-				$option_id = 'sbm_woo_sbm_options';
-				
-				$query = $this->add_single_to_export_query( $option_id, $count );
-				
-				$query_inner .= $query['string'];
-				$count = $query['count'];
 			
 			break;
 			

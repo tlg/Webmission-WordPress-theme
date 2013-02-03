@@ -4,7 +4,11 @@
     <div id="content" class="page col-full">
 		<div id="main" class="col-left">
 		           
-			<?php if ( function_exists('yoast_breadcrumb') ) { yoast_breadcrumb('<div id="breadcrumb"><p>','</p></div>'); } ?>
+				<?php if ( isset( $woo_options['woo_breadcrumbs_show'] ) && $woo_options['woo_breadcrumbs_show'] == 'true' ) { ?>
+				<div id="breadcrumb">
+					<?php woo_breadcrumbs(); ?>
+				</div><!--/#breadcrumbs -->
+			<?php } ?>
 
             <?php if (have_posts()) : $count = 0; ?>
             <?php while (have_posts()) : the_post(); $count++; ?>

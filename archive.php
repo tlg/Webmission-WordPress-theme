@@ -4,7 +4,11 @@
     <div id="content" class="col-full">
 		<div id="main" class="col-left">
             
-		<?php if ( function_exists('yoast_breadcrumb') ) { yoast_breadcrumb('<div id="breadcrumb"><p>','</p></div>'); } ?>
+			<?php if ( isset( $woo_options['woo_breadcrumbs_show'] ) && $woo_options['woo_breadcrumbs_show'] == 'true' ) { ?>
+				<div id="breadcrumb">
+					<?php woo_breadcrumbs(); ?>
+				</div><!--/#breadcrumbs -->
+			<?php } ?>
 		<?php if (have_posts()) : $count = 0; ?>
         
             <?php if (is_category()) { ?>
@@ -34,11 +38,11 @@
             <div class="post">
 
                 <?php if ( $woo_options['woo_post_content'] != "content" ) woo_image('width='.$woo_options['woo_thumb_w'].'&height='.$woo_options['woo_thumb_h'].'&class=thumbnail '.$woo_options['woo_thumb_align']); ?> 
-
-                <h2 class="title"><a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title(); ?>"><?php the_title(); ?></a></h2>
                 
                 <?php woo_post_meta(); ?>
-                
+
+                <h2 class="title"><a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title(); ?>"><?php the_title(); ?></a></h2>
+                                
                 <div class="entry">
                     <?php if ( $woo_options['woo_post_content'] == "content" ) the_content(__('Read More...', 'woothemes')); else the_excerpt(); ?>
                 </div><!-- /.entry -->

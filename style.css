@@ -7,7 +7,7 @@ Author: WooThemes
 Author URI: http://www.woothemes.com
 Tags: woothemes
 
-	Copyright: (c) 2009-2011 WooThemes.
+	Copyright: ï¿½ 2009-2011 WooThemes.
 	License: GNU General Public License v2.0
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -148,7 +148,6 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 .layout-right-content #main { float:right; }
 .layout-right-content #sidebar { float:left; border-left:none; border-right: 1px solid #D6D7D7; box-shadow:inset -3px 0 0 rgba(0,0,0,.03); -webkit-box-shadow:inset -3px 0 0 rgba(0,0,0,.03); -moz-box-shadow:inset -3px 0 0 rgba(0,0,0,.03);}
 
-
 /* 2.2 Navigation */
 
 #navigation ul.rss{background:url(images/ico-rss.png) no-repeat right 5px;padding:0 25px 0 0;margin-right:10px;}
@@ -156,7 +155,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 #navigation ul.rss li a{color:#c63f00;text-decoration:none;}
 #navigation ul.rss li a:hover{text-decoration:underline;}
 
-.nav { z-index:99; margin:0; padding:0; list-style:none; line-height:1; border: solid #D6D7D7; border-width: 0 0 0 1px; }
+.nav { z-index:99; margin:0; padding:0; list-style:none; line-height:1; border: solid #D6D7D7; border-width: 0 0 0 1px; max-width:700px; }
 .nav a  { position:relative; color:#060606; display:block; z-index:100; padding: 70px 20px 15px 20px; line-height:18px; text-decoration:none; text-shadow:0 1px 0 rgba(255,255,255,0.8); min-width: 60px; font-size: 16px; font-weight: bold; border:1px solid #D6D7D7; border-width: 0 1px 0 0; }
 .nav a:hover, 
 .nav li.current_page_item a, 
@@ -174,7 +173,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	.nav li ul li a.sf-with-ul { padding:5px 10px; }
 	.nav li ul li a:hover,
 	.nav li ul li.current_page_item a,
-	.nav li ul li.current-menu-item a { background:#F6F6F6 !important; color: #333; }
+	.nav li ul li.current-menu-item a { background: #F6F6F6 !important; color: #333; }
 	
 	.nav li.current_page_item li a, 
 	.nav li.current_page_parent li a,
@@ -186,14 +185,14 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	.nav li ul ul li a  {  }
 	.nav li ul li ul li a  {  }
 	
-	.nav li:hover,.nav li.hover  { position:static; }
+	.nav li:hover,.nav li.hover  { position: static; }
 	.nav li:hover ul ul, .nav li.sfhover ul ul,
 	.nav li:hover ul ul ul, .nav li.sfhover ul ul ul,
-	.nav li:hover ul ul ul ul, .nav li.sfhover ul ul ul ul { left:-999em; }
+	.nav li:hover ul ul ul ul, .nav li.sfhover ul ul ul ul { left: -999em; }
 	.nav li:hover ul, .nav li.sfhover ul,
 	.nav li li:hover ul, .nav li li.sfhover ul,
 	.nav li li li:hover ul, .nav li li li.sfhover ul,
-	.nav li li li li:hover ul, .nav li li li li.sfhover ul  { left:auto; }
+	.nav li li li li:hover ul, .nav li li li li.sfhover ul  { left: auto; }
 	
 	.nav .sf-sub-indicator {background:	url(images/arrow-superfish.png) no-repeat;position:absolute;display:block;right:1em;bottom:20px;width:12px;height:12px;text-indent:-999em;overflow:hidden;}
 	.nav li ul .sf-sub-indicator {background:url(images/arrow-superfish-right.png) no-repeat; bottom: 6px;}
@@ -251,7 +250,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	#top { background: #000; }
 	#top .nav { border:none; }
 	#top .nav a { min-width:0;font-size:12px; border:none; color:#ddd; padding:8px 10px; line-height:18px; text-decoration:none; text-shadow:none; }
-	#top .nav li  {  }
+	#top .nav li  {}
 	#top .nav .sf-sub-indicator { display:none; }
 	
 	#top .nav a:hover, 
@@ -262,7 +261,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	#top .nav li.current-menu-item a,
 	#top .nav li.sfHover { background: #222; }
 	
-	#top .nav li ul  { background: #222; margin:0; padding:0px; width: 180px; border: none; z-index:999;
+	#top .nav li ul { background: #222; margin: 0; padding: 0px; width: 180px; border: none; z-index: 999;
 		/* Box Shadow */
 		-moz-box-shadow: 0 2px 2px rgba(0,0,0,.1);
 		-webkit-box-shadow: 0 2px 2px rgba(0,0,0,.1);
@@ -272,7 +271,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 		/* Border Radius */
 		border-radius: 0 0 4px 4px; -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; 
 	}
-	#top .nav li ul li { border:none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+	#top .nav li ul li { border:none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 9999; }
 	#top .nav li ul li a  { border:none; padding:8px 10px; width:160px; color:#ddd; background: none;}
 	#top .nav li ul li a:hover  { background: #000 !important; }
 	#top .nav li ul li a.sf-with-ul { padding-right:10px; }
@@ -288,7 +287,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 	#top .nav li li li li:hover ul, #top .nav li li li li.sfhover ul  { left:auto; }
 
 /* 2.3 Header */
-#header{clear:both;position:relative;border-bottom:4px solid #060606;z-index: 9999;}
+#header{clear:both;position:relative;border-bottom:4px solid #060606;z-index: 700;}
 
 #logo  { padding: 41px 0 0 0px; margin-right: 64px; }
 #logo img  { }
@@ -339,7 +338,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 /* 2.7 Homepage */
 #main h3.section { background: url(images/strips.png) repeat; padding:10px 15px; line-height:1em; font-weight: bold; margin-bottom: 25px; }
 #main .block { width: 196px; float:left; margin:0 20px 20px 0; border:none; }
-#main .block.last {Êmargin-right:0; }
+#main .block.last {margin-right:0; }
 #main .block h2.title { font-size:18px; margin-bottom:5px; line-height:1.2em;  }
 
 /* 2.8 Slider */
@@ -725,7 +724,7 @@ a.button.active  {
 
 /* 6.3 Gravity forms */
 .gfield { margin-bottom: 10px; }
-.gform_wrapper .top_label .gfield_label { display:block;float:left; padding-right:20px; width: 100px; margin: 5px 0px 4px !important; }
+.gform_wrapper .top_label .gfield_label { display:block; padding-right:20px; width: 100px; margin: 5px 0px 4px !important; }
 .gform_wrapper input.button { padding: 5px 10px 6px !important; }
 .gform_wrapper input { padding: 7px 3px !important; }
 .gform_wrapper .top_label input.large, .gform_wrapper .top_label select.large, .gform_wrapper .top_label textarea.textarea { width: 400px !important; padding: 7px 3px !important; }
@@ -776,4 +775,3 @@ h3.archive_year { font: bold 20px sans-serif; color:#555; margin-top:0; }
 #connect .related-posts ul { list-style: outside disc; margin:5px 0 5px 15px; }
 .widget #connect { margin:0; padding:0; background:none; border:none; }
 .widget #connect .fl, .widget #connect .fr { float:none;  }
-

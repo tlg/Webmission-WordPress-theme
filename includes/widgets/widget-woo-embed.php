@@ -7,135 +7,135 @@
 class Woo_EmbedWidget extends WP_Widget {
 
 	function Woo_EmbedWidget() {
-		$widget_ops = array('description' => 'Display the Embed code from posts in tab like fashion.' );
-		parent::WP_Widget(false, __('Woo - Embed/Video', 'woothemes'),$widget_ops);      
+		$widget_ops = array( 'description' => __( 'Display the Embed code from posts in tab like fashion.', 'woothemes' ) );
+		parent::WP_Widget( false, __( 'Woo - Embed/Video', 'woothemes' ), $widget_ops );
 	}
 
-	function widget($args, $instance) { 
-		extract( $args ); 
+	function widget( $args, $instance ) {
+		extract( $args );
 		$title = $instance['title'];
 		$limit = $instance['limit'];
-		
+
 		$cat_id = $instance['cat_id'];
 		$tag = $instance['tag'];
-		
+
 		$width = $instance['width'];
 		$height = $instance['height'];
-				
-		if(!empty($tag))
-			$myposts = get_posts("numberposts=$limit&tag=$tag");
+
+		if( !empty( $tag ) )
+			$myposts = get_posts( "numberposts=$limit&tag=$tag&suppress_filters=0" );
 		else
-			$myposts = get_posts("numberposts=$limit&cat=$cat_id");
+			$myposts = get_posts( "numberposts=$limit&cat=$cat_id&suppress_filters=0" );
 
 		$post_list = '';
 		$count = 0;
 		$active = "active";
 		$display = "";
 
-        echo $before_widget; ?>
-       
+		echo $before_widget; ?>
+
         <?php
 
-			echo $before_title .$title. $after_title; ?>
+		echo $before_title . apply_filters( 'widget_title', $title, $instance, $this->id_base ) . $after_title; ?>
 		<div class="video-inside">
-            <?php    
-		
-			if(isset($myposts)) {
-			
-				foreach($myposts as $mypost) {
-					
-					$embed = woo_get_embed('embed',$width,$height,'widget_video',$mypost->ID);
+            <?php
 
-					if($embed) {
-						$count++;
-						if($count > 1) {$active = ''; $display = "style='display:none'"; }
-						?>
+		if( isset( $myposts ) ) {
+
+			foreach( $myposts as $mypost ) {
+
+				$embed = woo_get_embed( 'embed', $width, $height, 'widget_video', $mypost->ID );
+
+				if( $embed ) {
+					$count++;
+					if( $count > 1 ) {$active = ''; $display = "style='display:none'"; }
+?>
 						<div class="widget-video-unit" <?php echo $display; ?> >
 						<?php
-							echo '<h4>' . get_the_title($mypost->ID)  . "</h4>\n";
-							
-							echo $embed;
-							
-							$post_list .= "<li class='$active'><a href='#'>" . get_the_title($mypost->ID) . "</a></li>\n";
-						?>
+					echo '<h4>' . get_the_title( $mypost->ID )  . "</h4>\n";
+
+					echo $embed;
+
+					$post_list .= "<li class='$active'><a href='#'>" . get_the_title( $mypost->ID ) . "</a></li>\n";
+?>
 						</div>
 						<?php
-					}
 				}
 			}
-		?>
+		}
+?>
         <ul class="widget-video-list">
         	<?php echo $post_list; ?>
         </ul>
-		
+
 		</div>
-		
+
         <?php
-			
+
 		echo $after_widget;
 
 	}
 
-	function update($new_instance, $old_instance) {                
+	function update( $new_instance, $old_instance ) {
 		return $new_instance;
 	}
 
-	function form($instance) {        
-		$title = esc_attr($instance['title']);
-		$limit = esc_attr($instance['limit']);
-		$cat_id = esc_attr($instance['cat_id']);
-		$tag = esc_attr($instance['tag']);
+	function form( $instance ) {
+		$title = esc_attr( $instance['title'] );
+		$limit = esc_attr( $instance['limit'] );
+		$cat_id = esc_attr( $instance['cat_id'] );
+		$tag = esc_attr( $instance['tag'] );
 
-		$width = esc_attr($instance['width']);
-		$height = esc_attr($instance['height']);
-		
-		if(empty($limit)) $limit = 10;
-		if(empty($width)) $width = 267;
-		if(empty($height)) $height = 220;
+		$width = esc_attr( $instance['width'] );
+		$height = esc_attr( $instance['height'] );
 
-		?>
+		if( empty( $limit ) ) $limit = 10;
+		if( empty( $width ) ) $width = 267;
+		if( empty( $height ) ) $height = 220;
+
+?>
         <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:','woothemes'); ?></label>
-            <input type="text" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>" class="widefat" id="<?php echo $this->get_field_id('title'); ?>" />
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'woothemes' ); ?></label>
+            <input type="text" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $title; ?>" class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" />
         </p>
        <p>
-	   	   <label for="<?php echo $this->get_field_id('cat_id'); ?>"><?php _e('Category:','woothemes'); ?></label>
+	   	   <label for="<?php echo $this->get_field_id( 'cat_id' ); ?>"><?php _e( 'Category:', 'woothemes' ); ?></label>
 	       <?php $cats = get_categories(); ?>
-	       <select name="<?php echo $this->get_field_name('cat_id'); ?>" class="widefat" id="<?php echo $this->get_field_id('cat_id'); ?>">
+	       <select name="<?php echo $this->get_field_name( 'cat_id' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'cat_id' ); ?>">
            <option value="">Disabled</option>
 			<?php
-			
-           	foreach ($cats as $cat){
-           	?><option value="<?php echo $cat->cat_ID; ?>" <?php if($cat_id == $cat->cat_ID){ echo "selected='selected'";} ?>><?php echo $cat->cat_name . ' (' . $cat->category_count . ')'; ?></option><?php
-           	}
-           ?>
+
+		foreach ( $cats as $cat ){
+			?><option value="<?php echo $cat->cat_ID; ?>" <?php if( $cat_id == $cat->cat_ID ){ echo "selected='selected'";} ?>><?php echo $cat->cat_name . ' (' . $cat->category_count . ')'; ?></option><?php
+		}
+?>
            </select>
        </p>
         <p>
-            <label for="<?php echo $this->get_field_id('tag'); ?>">Or <?php _e('Tag:','woothemes'); ?></label>
-            <input type="text" name="<?php echo $this->get_field_name('tag'); ?>" value="<?php echo $tag; ?>" class="widefat" id="<?php echo $this->get_field_id('tag'); ?>" />
+            <label for="<?php echo $this->get_field_id( 'tag' ); ?>">Or <?php _e( 'Tag:', 'woothemes' ); ?></label>
+            <input type="text" name="<?php echo $this->get_field_name( 'tag' ); ?>" value="<?php echo $tag; ?>" class="widefat" id="<?php echo $this->get_field_id( 'tag' ); ?>" />
         </p>
 
          <p>
-            <label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Size:','woothemes'); ?></label>
-            <input type="text" size="2" name="<?php echo $this->get_field_name('width'); ?>" value="<?php echo $width; ?>" class="" id="<?php echo $this->get_field_id('width'); ?>" /> W
-            <input type="text" size="2" name="<?php echo $this->get_field_name('height'); ?>" value="<?php echo $height; ?>" class="" id="<?php echo $this->get_field_id('height'); ?>" /> H
+            <label for="<?php echo $this->get_field_id( 'width' ); ?>"><?php _e( 'Size:', 'woothemes' ); ?></label>
+            <input type="text" size="2" name="<?php echo $this->get_field_name( 'width' ); ?>" value="<?php echo $width; ?>" class="" id="<?php echo $this->get_field_id( 'width' ); ?>" /> W
+            <input type="text" size="2" name="<?php echo $this->get_field_name( 'height' ); ?>" value="<?php echo $height; ?>" class="" id="<?php echo $this->get_field_id( 'height' ); ?>" /> H
 
         </p>
-        
+
          <p>
-            <label for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Limit (optional):','woothemes'); ?></label>
-            <input type="text" name="<?php echo $this->get_field_name('limit'); ?>" value="<?php echo $limit; ?>" class="" id="<?php echo $this->get_field_id('limit'); ?>" />
+            <label for="<?php echo $this->get_field_id( 'limit' ); ?>"><?php _e( 'Limit (optional):', 'woothemes' ); ?></label>
+            <input type="text" name="<?php echo $this->get_field_name( 'limit' ); ?>" value="<?php echo $limit; ?>" class="" id="<?php echo $this->get_field_id( 'limit' ); ?>" />
         </p>
 
         <?php
 	}
-} 
+}
 
-register_widget('Woo_EmbedWidget');
+register_widget( 'Woo_EmbedWidget' );
 
-if(is_active_widget( null,null,'woo_embedwidget' ) == true) {
-	add_action('wp_footer','woo_widget_embed_js');
+if( is_active_widget( null, null, 'woo_embedwidget' ) == true ) {
+	add_action( 'wp_footer', 'woo_widget_embed_js' );
 }
 
 function woo_widget_embed_js(){
@@ -161,6 +161,4 @@ function woo_widget_embed_js(){
 </script>
 <?php
 }
-
-
 ?>

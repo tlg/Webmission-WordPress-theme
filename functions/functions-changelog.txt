@@ -1,5 +1,218 @@
 *** WooThemes Framework Changelog **
 
+2012.12.06 - version 5.5.2
+ * admin-setup.php - Updated docblocking to standard formatting. Overall code clean-up and optimisation. Fixed "undefined index 'id'" notice in PHP 5.4.x.
+ * admin-interface.php - Fixed "illegal offset 'version'" notice in PHP 5.4.x. Added time_masked field.
+ * admin-hooks.php - Fixed "Creating default object from empty value" notice in PHP 5.4.x. Code clean-up and optimisation. Updated docblocking to standard formatting.
+ * admin-custom.php - Updated docblocking to standard formatting. Added capability check when saving custom fields. Added time_masked field.
+ * admin-functions.php - Add notice banner to "Theme Options" screen if a static front page is in use. Add "alt-style-X" body CSS class for the current alt style in use.
+ * admin-style.css - Adds styling for the "static front page" notice banner.
+ * /js/woo-custom-fields.js - changed the selector from time to time_masked for the legacy time field
+
+2012.11.22 - version 5.5.1
+ * admin-functions.php - Adjust woo_image() to better calculate the height of an attached image, if no height is specified.
+ * admin-style.css - Updated styling of the "Upload" button for WordPress 3.5 compatibility.
+
+2012.11.05 - version 5.5.0
+ * /classes/class-wp-app-store-installer.php - Remove WP App Store installer bridge.
+ * admin-init.php - Remove call to WP App Store installer bridge.
+ * admin-functions.php - Fix woo_pagination() for search queries and for taxonomy archives, to ensure query is preserved correctly. Fix over-escaping in cleanSource(). Fix grammer error in WooDojo notice in theme options.
+ * admin-seo.php - Removed all logic for WooSEO admin screen.
+ * admin-sbm.php - Remove all logic for the Sidebar Manager admin screen. Make sure "woo_sidebar()" returns "dynamic_sidebar()".
+ * admin-interface.php - Remove "SEO" admin menu screen for WooSEO and "Sidebar Manager" admin menu screen for Sidebar Manager.
+ * admin-framework-settings.php - Remove "Disable SEO Menu Item" and "Disable Sidebar Manager Menu Item" settings.
+ * admin-style.css - Remove Sidebar Manager CSS styles.
+ * admin-backup.php - Code maintenance. Remove "Sidebar Manager" and "SEO" from backed up data. Add scope to each class property and method.
+
+2012.09.12 - version 5.4.2
+ * admin-init.php - Fix theme version display in meta tag hooked onto wp_head.
+ * admin-interface.php - Fix theme version display in admin interface header. Fix version number in theme update check when using a child theme.
+ * admin-sbm.php - Fix theme version display in admin interface header.
+ * admin-seo.php - Fix theme version display in admin interface header.
+ * admin-framework-settings.php - Fix theme version display in admin interface header.
+ * admin-setup.php - Escape stylesheet URLs in the woo_output_custom_css() and woo_output_alt_stylesheet() functions.
+ * admin-functions.php - Adjust escaping logic inside woo_image(). Fixes display of the "title" attribute. Add functions to retrieve and display the theme version data in the admin interface header. Clarify where in the theme the "thumb.php" file can be found and removed from. Set default login logo height to 67 if the height dimension isn't calculated correctly. Make sure vt_resize() doesn't try to sanitize the full image path as if it were a filename.
+ * admin-shortcodes.php - Fix custom background and border colour options in the [button] shortcode, and the icon="none" option in the [box] shortcode. Fix [twitter] shortcode to ensure attributes are applied correctly. Examine all shortcodes and remove over-escaping on attribute groups.
+
+2012.09.10 - version 5.4.1
+ * admin-functions.php - Fixed bug for Google Analytics output.
+
+2012.08.31 - version 5.4.0
+ * - SECURITY UPDATE - Sucuri Security Code Audit update
+ * - Various security checks and improvements were made including attribute escaping, direct file access prevention, code optimization and deprecation.
+ * *.php - Added direct file access security check for all php files.
+ * admin-custom.php - Security improvements.
+ * admin-custom-nav.php - Deprecated old functionality including WooNav and all related assets.
+ * admin-framework-settings.php - Deprecated old functionality.
+ * admin-functions.php - Added additional fonts, general cleanup of code, retired WooNav and all related assets, fixed all error notices, security improvements,.
+ * admin-hooks.php - Fixed error notice for undefined object for $query_context
+ * admin-init.php - Deprecated old functionality.
+ * admin-interface.php - Deprecated old functionality including WooNav and all related assets, security improvements.
+ * admin-sbm.php - Deprecated old functionality, security improvements.
+ * admin-seo.php - Deprecated old functionality, security improvements.
+ * admin-shortcodes.php - Security improvements. Fixed bug in Twitter Follow shortcode to resolve display of the Twitter button.
+ * admin-style.css - Deprecation notices styles.
+ * css/shortcodes.css - Made column shortcodes responsive.
+ * classes/class-wp-app-store-installer.php - added WP App Store installer class
+ * js/jquery.maskedinput.js - Security improvements.
+ * js/shortcode-generator/dialog.php - Security improvements.
+ * js/shortcode-generator/js/dialog.js.php - Security improvements.
+ 
+2012.04.29 - version 5.3.12 - critical
+ * - SECURITY UPDATE - Make sure the shortcode preview file's code is removed correctly upon WooFramework upgrade.
+ * admin-setup.php - Add extra sanitization to the alternate styles loader.
+ * /js/shortcode-generator/preview-shortcode-external.php - Make sure the file is empty (aside from a short error message) and that all vulnerable code is removed successfully.
+ * admin-functions.php - added "Bitter" Google font
+
+2012.04.29 - version 5.3.11 - critical
+ * - SECURITY UPDATE - Shortcode preview feature removed in previous version due to potential exploit.
+ * admin-functions.php - Make sure PressTrends banner displays only for PressTrends-enabled themes.
+
+2012.04.25 - version 5.3.10
+ * /images/ico-presstrends-banner.png - Logo for the PressTrends banner.
+ * admin-interface.php - Bump version number of admin-style.css enqueue to 5.3.10.
+ * admin-functions.php - Add PressTrends banner, displayed upon first activation of a theme with a PressTrends key.
+ * admin-style.css - Add styling for the PressTrends banner.
+
+2012.04.24 - version 5.3.9 - critical
+ * admin-custom.php - Make sure to check if a post type is set before running the nonce check in the custom fields saving logic (this fixes the conflict on the WordPress Menus screen).
+
+2012.04.23 - version 5.3.8 - critical
+ * /js/shortcode-generator/js/dialog-js.php - Removed all functionality relating to the shortcode preview.
+ * /js/shortcode-generator/editor_plugin.js - Remove non-required woo_js_querystring() functionality and add extra security layer to the dialog popup.
+ * /js/shortcode-generator/dialog.php - Add extra security layer to the dialog popup window.
+ * /js/shortcode-generator/preview-shortcode-external.php - REMOVED
+ * admin-shortcode-generator.php - Removed non-essential testing method (not previously used) and added extra security layer.
+ * admin-custom.php - Add extra security layer to the custom fields meta box. Make sure it's possilbe to display the "SEO" fields, even if there are no "General Settings" fields for a post type. Remove check on 0-indexed array key.
+
+2012.04.16 - version 5.3.7 - critical
+ * /js/shortcode-generator/preview-shortcode-external.php - Escape URLs to JavaScript files and update jQuery in use to V1.7.2.
+ * /js/shortcode-generator/dialog.php - Escape URLs to JavaScript files.
+ * admin-setup.php - Make sure, when loading an alternate style via the query variable, to include /css/layout.css if the current theme contains the file, when loading the "default" alternate style.
+
+2012.04.16 - version 5.3.6
+ * thumb.php - updated TimThumb 2.8.10
+
+2012.04.12 - version 5.3.5
+ * admin-interface.php - Add jquery ui slider as a theme option control
+ * admin-style.css - Added styling for the jquery ui slider.
+ * /js/woo-admin-interface.js - Add jquery ui slider as a theme option control
+
+2012.04.02 - version 5.3.4
+ * admin-setup.php - Add "activated=true" to the theme activation redirect URL.
+ * admin-interface.php - Add custom "wooframework_container_inside" action to the admin interface straight inside #woo_container.
+ * admin-functions.php - Add WooDojo banner advert logic for the Theme Options screen.
+ * admin-style.css - Added styling for the WooDojo banner.
+ * /js/woo-admin-interface.js - Add confirmation popup on banner "close" button.
+
+2012.03.16 - version 5.3.3
+ * admin-functions.php - Cater for static front pages that use the /page/ permastruct for pagination, when determining the page number to display inside woo_title().
+
+2012.03.12 - version 5.3.2
+ * admin-custom.php - Make sure the SEO custom fields don't display if the "use 3rd party plugin data" checkbox is checked. Prevent foreach() error message.
+ * admin-shortcodes.php - Add "show_default_fields" setting to the [contact_form] shortcode, to disable the default Name, E-mail and Message fields.
+
+2012.03.06 - version 5.3.1
+ * thumb.php - fixed timthumb-config.php path to look in theme root folder.
+
+2012.02.22 - version 5.3.0
+ * admin-interface.php - Make sure that selected theme options aren't updated if the user doesn't have the "unfiltered_html" capability.
+ * admin-custom.php - Add tabbing to custom fields meta box. Move "SEO" fields into a tab instead of their own meta box.
+ * /css/woo-custom-fields.css - Add styling for custom fields tabs.
+ * /images/wf-tab-icons.png - Add image for tab icons.
+ * /js/woo-custom-fields.js - Add JavaScript logic for custom field tabs.
+
+2012.02.21 - version 5.2.3
+ * admin-shortcodes.php - Added locale field to fblike shortcode.
+ * /js/shortcode-generator/shortcodes/fblike.js - Added locale field to fblike shortcode generator.
+
+2012.02.17 - version 5.2.2
+ * thumb.php - TimThumb version 2.8.5 revert since 2.8.7 failed to work for many.
+
+2012.02.13 - version 5.2.1
+ * admin-shortcodes.php - Update twitter and twitter_follow shortcodes with adjustments to the Twitter buttons API.
+ * /js/shortcode-generator/shortcodes/twitter.js - Update generator for the twitter shortcode to include new options and remove legacy options no longer supported by Twitter.
+ * /js/shortcode-generator/shortcodes/twitter_follow.js - Update generator for the twitter shortcode to include new options and remove legacy options no longer supported by Twitter.
+ * thumb.php - TimThumb version 2.8.7
+
+2012.02.09 - version 5.2.0
+ * admin-shortcodes.php - Add Pinterest "Pin It" button shortcode.
+ * /js/shortcode-generator/editor_plugin.js - Add Pinterest shortcode to the dropdown menu.
+ * /js/shortcode-generator/shortcodes/pinterest.js - Add generator function for the Pinterest "Pin It" button shortcode.
+
+2012.02.08 - version 5.1.8
+ * admin-interface.php - Fix bug in theme update notification where full version number was not being returned correctly.
+
+2012.02.07 - version 5.1.7
+ * admin-functions.php - Replace the_content filter in woo_embed() with woo_embed filter and apply the do_shortcode function to it. Convert PHP strings in the Twitter JavaScript code to use esc_attr_e() instead of _e().
+
+2012.02.04 - version 5.1.6
+ * admin-functions.php - Make sure woo_breadcrumbs() doesn't try to find the parent trail items if the path is '/'. Adjust the CSS of the login logo to override custom logos set by default in some themes.
+
+2012.01.28 - version 5.1.5
+ * admin-interface.php - Remove trailing slash from "Update Framework" link in the Framework update admin notice.
+ * admin-functions.php - Force raw permastruct in woo_pagination() when on search results screens, to make multi-word search links more accurate.
+
+2012.01.24 - version 5.1.4
+ * admin-custom.php - Optimise the layout of the "timestamp" custom field.
+ * /js/woo-custom-fields.js - Optimise the datepicker initialization logic for the custom fields.
+ * /js/woo-admin-interface.js - Fix bug in typography field unit switching when switching from "em" to "px". Added Century Gothic font.
+ * /css/woo-custom-fields.css - Adjust the CSS for the "timestamp" custom field.
+ * admin-interface.php - Optimise the layout of the "timestamp" field type. Make sure the "typography" field type takes the default settings if none are stored. Optimise how typography data is constructed before save.
+ * admin-style.css - Optimise styling for the "timestamp" field type.
+ * admin-functions.php - Output title using wp_title() with WP SEO plugin
+ * admin-style.css - fixed radio button styling
+
+2012.01.19 - version 5.1.3
+ * admin-functions.php - woo_image() added fix to remove height="" so images show in IE
+
+2012.01.18 - version 5.1.2
+ * thumb.php - new version of TimThumb 2.8.5
+
+2012.01.17 - version 5.1.1
+ * admin-functions.php - Revert WooFramework update checker to previous version of the code (from V4.9.0).
+
+2012.01.12 - version 5.1.0
+ * admin-framework-settings.php - Added options under "Branding" to customise the URL and image title on the WordPress login screen. Gettext all Framework Settings and interface strings.
+ * admin-functions.php - Added logic to customise the URL and image title on the WordPress login screen.
+ * admin-setup.php - Check for and use custom.css from the child theme if it's present.
+ * admin-interface.php - Added div around radio button option to style
+ * admin-style.css - Fixed radio button label alignment bug
+
+2011.12.22 - version 5.0.3
+ * admin-functions.php - changed wp_title() to use same code as TwentyEleven for outputting title when using 3rd party SEO.
+ * admin-interface.php - removed trailing slash from framework update notification URL
+ * admin-interface.php,
+   admin-style.css - tweaked new options styling to look better with no icon and two line heading
+
+2011.12.15 - version 5.0.2
+ * admin-functions.php - Revise styling of custom login logo for WordPress 3.3.
+ * admin-style.css - Options panel left menu positioning fix. Tweak padding on left menu items.
+ * admin-shortcodes.css - fixed typo topkeft
+
+2011.12.13 - version 5.0.1
+ * admin-style.css - Resolve styling conflict between new theme options interface and the Sidebar Manager.
+ * admin-interface.php - Removed $value['icon'] call from subheadings.
+ * admin-seo.php, admin-functions.php - Changed the default meta value to 'follow' instead of 'nofollow'.
+
+2011.12.07 - version 5.0.0
+ * admin-functions.php - Replaced get_the_content() with $post->post_content in woo_meta(), to avoid additional injected logic being displayed. Wrap it in strip_tags() and strip_shortcodes(). Refined woo_get_fw_version() with better error handling. Added urlencode() around the search query in woo_pagination when using the default "raw" search permastruct. Added variants to the "Rokkit" Google WebFont.
+ * admin-interface.php - Refined woothemes_version_checker() with better error handling. Adjusted WooThemes Machine to build a multi-dimensional array of the menu items for the interface navigation. Changed version number of interface JavaScript to 5.0.0 to force refresh to latest version of the file. First version of the "timestamp" field type.
+ * admin-shortcodes.php - Added [stumbleupon] shortcode. Added optional unique ID parameter to tabber shortcode.
+ * admin-custom.php - Added first version of the "timestamp" custom field type.
+ * /css/woo-custom-fields.css - Added styling for the "timestamp" field type.
+ * /js/shortcodes.js - Added "tab auto-selection via hash" logic to tabber shortcode JavaScript. Uses #tab-id on the URL to automatically select the specified tab (unique ID required on tabber).
+ * /js/shortcode-generator/shortcodes/stumbleupon.js - Added generator for the [stumbleupon] shortcode.
+ * /js/shortcode-generator/shortcodes/tab.js - Added "unique ID" parameter to tabber shortcode generator.
+ * /js/shortcode-generator/editor_plugin.js - Added [stumbleupon] shortcode to the shortcodes menu.
+ * /js/woo-admin-interface.js - Added JavaScript logic to handle the sub-menus, as well as fly-out menus for closed menus with sub-menu items.
+ * admin-style.css - Added basic styling for hiding fly-out menus when not applicable, as well as positioning the fly-out menus.
+ * thumb.php - latest version of TimThumb 2.8.4
+ * admin-framework-settings.php - Updated "Admin Bar" text to read "WordPress Toolbar".
+
+2011.11.25 - version 4.9.2
+ * admin-custom.php - Resolved "undefined variable" issue on $current_value when attempting to remove custom meta.
+
 2011.11.24 - version 4.9.1
  * admin-functions.php - fixed bug with getting youtube images
 

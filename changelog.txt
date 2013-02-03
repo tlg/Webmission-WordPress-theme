@@ -1,13 +1,70 @@
 *** Delicious Magazine Changelog ***
 
-2011.08.19 - version 1.0.10
- * style.css - Fixed IE navigation (line 242)
+2012.12.12 - version 1.1.9
+ * /includes/js/slides.min.jquery.js - Update SlidesJS to use alternate version (slight downgrade) for WordPress 3.5 compatibility.
 
+2012.06.19 - version 1.1.8
+ * style.css - Removed equal columns CSS fix.
+ * includes/general.js - Reverted to equal columns JS fix.
+
+2012.03.21 - version 1.1.7
+ * archive.php - move post meta above title to match homepage and allow images to be clickable.
+
+2012.02.27 - version 1.1.6
+ * style.css - further improvements to equal columns CSS fix.
+
+2012.02.16 - version 1.1.5
+ * style.css - added equal columns fix.
+ * includes/general.js - removed columns height script 
+
+2011.11.29 - version 1.1.4
+ * /includes/theme-functions.php - Suppress filters in Woo - Tabs "Latest" and "Popular" tab functions.
+ * /includes/widgets/widget-woo-adspace.php - Make sure all strings are translatable.
+ * /includes/widgets/widget-woo-blogauthor.php - Make sure all strings are translatable.
+ * /includes/widgets/widget-woo-embed.php - Make sure all strings are translatable.
+ * /includes/widgets/widget-woo-flickr.php - Make sure all strings are translatable.
+ * /includes/widgets/widget-woo-search.php - Make sure all strings are translatable.
+ * /includes/widgets/widget-woo-subscribe.php - Make sure all strings are translatable.
+ * /includes/widgets/widget-woo-tabs.php - Make sure all strings are translatable.
+ * /includes/widgets/widget-woo-twitter.php - Make sure all strings are translatable.
+ * /lang/en_GB.po - Rescanned language file.
+
+2011.11.21 - version 1.1.3
+* /includes/theme-functions.php - added Google Plus to Sub/Connect
+
+2011.11.16 - version 1.1.2
+ * general.js - fixed js error
+
+2011.11.10 - version 1.1.1
+ * general.js - updated dynamic columns height script
+ 
+2011.11.04 - version 1.1
+ * includes/theme-options.php - added option for integrated breadcrumbs
+ * search.php,
+   template-xxx.php,
+   archive.php,
+   single.php
+   page.php
+   index.php - replaced yoast breadcrumbs function call with woo_breadcrumbs
+
+2011.11.03 - version 1.0.13
+ * includes/theme-actions.php - set preload to false as it was loading default slidesJS image which didn't exist.
+
+2011.10.18 - version 1.0.12
+ * index.php - Code consistency checks. Make sure posts are excluded appropriately.
+ * style.css - Clean up position of SuperFish navigation arrows on dropdown navigation menu items.
+
+2011.10.07 - version 1.0.11
+   * style.css - Fixed an issue with Top Navigation dropdowns
+   
+2011.08.19 - version 1.0.10
+   * style.css - Fixed IE navigation (line 242)
+   
 2011.08.17 - version 1.0.9
- * includes/theme-options.php, 
+   * includes/theme-options.php, 
    single.php,
    style.css - added single post ad option
-
+   
 2011.08.05 - version 1.0.8
  * includes/theme-options.php, 
    includes/theme-actions.php - updated slider speed options

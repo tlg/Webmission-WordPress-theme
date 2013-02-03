@@ -1,4 +1,8 @@
 <?php
+// File Security Check
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+<?php
 
 /**
  * Set taxonomies for post

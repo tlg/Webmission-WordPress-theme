@@ -146,7 +146,13 @@ $options[] = array( "name" => "Post Author Box",
 					"desc" => "This will enable the post author box on the single posts page. Edit description in Users > Your Profile.",
 					"id" => $shortname."_post_author",
 					"std" => "true",
-					"type" => "checkbox");    					 
+					"type" => "checkbox");   
+					
+$options[] = array( "name" => "Display Breadcrumbs",
+					"desc" => "Display dynamic breadcrumbs on each page of your website.",
+					"id" => $shortname."_breadcrumbs_show",
+					"std" => "false",
+					"type" => "checkbox" );					 					 
 
 $options[] = array( "name" => "Styling Options",
 					"type" => "heading",
@@ -513,7 +519,7 @@ $options[] = array( "name" => "Text",
 					"type" => "textarea"); 
 
 $options[] = array( "name" => "Subscribe By E-mail ID (Feedburner)",
-					"desc" => "Enter your <a href='http://www.google.com/support/feedburner/bin/answer.py?hl=en&answer=78982'>Feedburner ID</a> for the e-mail subscription form.",
+					"desc" => "Enter your <a href='http://www.woothemes.com/tutorials/how-to-find-your-feedburner-id-for-email-subscription/'>Feedburner ID</a> for the e-mail subscription form.",
 					"id" => $shortname."_connect_newsletter_id",
 					"std" => '',
 					"type" => "text"); 					

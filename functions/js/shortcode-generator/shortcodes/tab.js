@@ -25,6 +25,12 @@ wooShortcodeMeta={
 			id:"css",
 			help:"Set an optional custom CSS class for the tabber.", 
 			defaultText: ''
+		},
+		{
+			label:"Unique Tabber ID",
+			id:"tabberID",
+			help:"Set an optional unique ID for the tabber.", 
+			defaultText: ''
 		}
 		],
 		disablePreview:true,
@@ -37,6 +43,8 @@ wooShortcodeMeta={
 			var c=a.content;
 			var tabberStyle = b.style;
 			var tabberTitle = b.tabberTitle;
+			var tabberID = b.tabberID;
+			var tabberClass = b.css;
 			
 			var g = ''; // The shortcode.
 			
@@ -61,6 +69,14 @@ wooShortcodeMeta={
 			} // End FOR Loop
 			
 			g += '[tabs style="'+ tabberStyle +'"';
+			
+			if ( tabberID != '' ) {
+				g += ' id="' + tabberID + '"';
+			}
+			
+			if ( tabberClass != '' ) {
+				g += ' css="' + tabberClass + '"';
+			}
 			
 			if ( tabberTitle ) { g += ' title="' + tabberTitle + '"'; } // End IF Statement
 			

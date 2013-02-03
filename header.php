@@ -74,4 +74,4 @@
 
 	</div><!-- /#header -->
 
-	<?php if ($woo_options['woo_featured'] == 'true' && is_home() && !is_paged()) include ( TEMPLATEPATH . '/includes/featured.php' ); ?>
+	<?php if ($woo_options['woo_featured'] == 'true' && ( is_home() OR is_front_page() ) && !is_paged()) include ( TEMPLATEPATH . '/includes/featured.php' ); ?>

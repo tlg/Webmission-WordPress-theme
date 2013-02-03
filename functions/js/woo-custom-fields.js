@@ -29,7 +29,7 @@
  	setup_datepickers: function () {
  		if ( $( '.woo-input-calendar, .woo_input_calendar' ).length ) {
 	 		$( '.woo-input-calendar, .woo_input_calendar' ).each(function () {
-	 			var buttonImageURL = $( this ).next( 'input[name=datepicker-image]' ).val();
+	 			var buttonImageURL = $( this ).parent().find( 'input[name=datepicker-image]' ).val();
 	 			$( this ).next( 'input[name=datepicker-image]' ).remove();
 	 			
 				$( '#' + $( this ).attr( 'id' ) ).datepicker( { showOn: 'button', buttonImage: buttonImageURL, buttonImageOnly: true, showAnim: 'slideDown' } );
@@ -44,13 +44,12 @@
  */
  
  	setup_timefields: function () {
- 		if ( $( '.woo_input_time' ).length ) {
-	 		$( '.woo_input_time' ).each( function (){
+ 		if ( $( '.woo_input_time_masked' ).length ) {
+	 		$( '.woo_input_time_masked' ).each( function (){
 				$( '#' + $( this ).attr( 'id' )).mask( '99:99' );
 			});
 		}
- 	}, // End setup_timefields()
- 	
+ 	}, // End setup_timefields() 	
 /**
  * setup_wordcounters()
  *
@@ -143,6 +142,16 @@
  			});
  		}
  	}, // End setup_colourpickers()
+
+/**
+ * setup_field_tabber()
+ *
+ * @since 5.3.0
+ */
+
+  	setup_field_tabber: function () {
+  		$( '.wooframework-tabs' ).tabs();
+  	}, // End setup_field_tabber()
  	
 /**
  * setup_upload_titletest()
@@ -176,6 +185,7 @@
 		woothemesCustomFields.setup_image_selectors();
 		woothemesCustomFields.setup_colourpickers();
 		woothemesCustomFields.setup_upload_titletest();
+		woothemesCustomFields.setup_field_tabber();
 		
 	});
   

@@ -85,8 +85,8 @@
 
 var framework_url = '<?php echo dirname( __FILE__ ); ?>';
 
-var shortcode_generator_path = '<?php echo $woo_framework_path; ?>';
-var shortcode_generator_url = '<?php echo $woo_framework_url; ?>' + 'js/shortcode-generator/';
+var shortcode_generator_path = '<?php echo esc_url( $woo_framework_path ); ?>';
+var shortcode_generator_url = '<?php echo esc_url( $woo_framework_url ); ?>' + 'js/shortcode-generator/';
 
 var wooDialogHelper = {
 
@@ -99,9 +99,6 @@ var wooDialogHelper = {
         jQuery( "#woo-btn-insert").click(function () {
             a.insertAction()
         });
-        jQuery( "#woo-btn-preview").click(function () {
-            a.previewAction()
-        })
     },
     
     setUpColourPicker: function () {
@@ -119,9 +116,6 @@ var wooDialogHelper = {
 			},
 			onHide: function (colpkr) {
 				jQuery(colpkr).fadeOut(500);
-				
-				wooDialogHelper.previewAction();
-				
 				return false;
 			},
 			onChange: function (hsb, hex, rgb) {
@@ -169,9 +163,6 @@ var wooDialogHelper = {
 					break;
 				
 				} // End SWITCH Statement
-                
-                // Automatic preview generation on load.
-                a.previewAction();
             })
 
         }
@@ -316,11 +307,6 @@ var wooDialogHelper = {
 
         var h = this;
         b.find( "#" + g).bind( "keydown focusout", function (e) {
-            if (e.type == "keydown" && e.which != 13 && e.which != 9 && !e.shiftKey) h.needsPreview = true;
-            else if (h.needsPreview && (e.type == "focusout" || e.which == 13)) {
-                h.previewAction(e.target);
-                h.needsPreview = false
-            }
         })
 
     },
@@ -343,11 +329,6 @@ var wooDialogHelper = {
 
         var h = this;
         b.find( "#" + g).bind( "keydown focusout", function (e) {
-            if (e.type == "keydown" && e.which != 13 && e.which != 9 && !e.shiftKey) h.needsPreview = true;
-            else if (h.needsPreview && (e.type == "focusout" || e.which == 13)) {
-                h.previewAction(e.target);
-                h.needsPreview = false
-            }
         })
 
     },
@@ -370,11 +351,6 @@ var wooDialogHelper = {
 
         var h = this;
         b.find( "#" + g).bind( "keydown focusout", function (e) {
-            if (e.type == "keydown" && e.which != 13 && e.which != 9 && !e.shiftKey) h.needsPreview = true;
-            else if (h.needsPreview && (e.type == "focusout" || e.which == 13)) {
-                h.previewAction(e.target);
-                h.needsPreview = false
-            }
         })
 
     },
@@ -432,20 +408,6 @@ var wooDialogHelper = {
         var h = this;
 
         b.find( "#" + g).bind( "change", function (e) {
-
-            if ((e.type == "change" || e.type == "focusout") || e.which == 9) {
-
-                h.needsPreview = true;
-
-            }
-
-            if (h.needsPreview) {
-
-                h.previewAction(e.target);
-
-                h.needsPreview = false
-            }
-            
             // Update the text in the appropriate span tag.
             var newText = jQuery(this).children( 'option:selected').text();
             
@@ -497,20 +459,6 @@ var wooDialogHelper = {
         var h = this;
 
         b.find( "#" + g).bind( "change", function (e) {
-
-            if ((e.type == "change" || e.type == "focusout") || e.which == 9) {
-
-                h.needsPreview = true;
-
-            }
-
-            if (h.needsPreview) {
-
-                h.previewAction(e.target);
-
-                h.needsPreview = false
-            }
-            
             // Update the text in the appropriate span tag.
             var newText = jQuery(this).children( 'option:selected').text();
             
@@ -571,20 +519,6 @@ var wooDialogHelper = {
         var h = this;
 
         b.find( "#" + g).bind( "change", function (e) {
-
-            if ((e.type == "change" || e.type == "focusout") || e.which == 9) {
-
-                h.needsPreview = true;
-
-            }
-
-            if (h.needsPreview) {
-
-                h.previewAction(e.target);
-
-                h.needsPreview = false
-            }
-            
             // Update the text in the appropriate span tag.
             var newText = jQuery(this).children( 'option:selected').text();
             
@@ -710,21 +644,6 @@ var wooDialogHelper = {
         this.needsPreview = false;
         tb_remove();
         jQuery( "#woo-dialog").remove()
-    },
-
-    previewAction: function (a) {
-    
-    	var fontValue = '';
-    	
-    	jQuery( '#woo-options-table').find( 'select.input-select-font').each ( function () {
-    	
-    		fontValue = jQuery(this).val();
-    	
-    	});
-    
-        jQuery(a).hasClass( "woo-validation-marker") && this.validateLinkFor(a);
-        jQuery( "#woo-preview h3:first").addClass( "woo-loading" );
-        jQuery( "#woo-preview-iframe").attr( "src", shortcode_generator_url + "preview-shortcode-external.php?shortcode=" + encodeURIComponent(this.makeShortcode()) + "&font=" + fontValue )
     },
 
     validateLinkFor: function (a) {

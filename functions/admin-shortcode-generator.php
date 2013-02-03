@@ -1,4 +1,8 @@
 <?php
+// File Security Check
+if ( ! defined( 'ABSPATH' ) ) exit;
+?>
+<?php
 /*-----------------------------------------------------------------------------------
 
 CLASS INFORMATION
@@ -20,7 +24,7 @@ TABLE OF CONTENTS
 - Utility Functions
 - framework_url()
 - ajax_action_check_url()
-- shortcode_testing()
+- ajax_action_generate_nonce()
 
 INSTANTIATE CLASS
 
@@ -41,17 +45,12 @@ class WooThemes_Shortcode_Generator {
 -----------------------------------------------------------------------------------*/
 
 	function WooThemes_Shortcode_Generator () {
-	
 		// Register the necessary actions on `admin_init`.
 		add_action( 'admin_init', array( &$this, 'init' ) );
 		
 		// wp_ajax_... is only run for logged users.
 		add_action( 'wp_ajax_woo_check_url_action', array( &$this, 'ajax_action_check_url' ) );
-		
-		// Shortcode testing functionality.
-		//if ( ! function_exists( 'add_shortcode' ) ) return;
-		//add_shortcode( 'testing',     array( &$this, 'shortcode_testing' ) );
-	
+		add_action( 'wp_ajax_woo_shortcodes_nonce', array( &$this, 'ajax_action_generate_nonce' ) );
 	} // End WooThemes_Shortcode_Generator()
 
 /*-----------------------------------------------------------------------------------
@@ -63,22 +62,22 @@ class WooThemes_Shortcode_Generator {
 	function init() {
 		global $pagenow;
 		
-		if ( ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) && get_user_option( 'rich_editing') == 'true' && ( in_array( $pagenow, array( 'post.php', 'post-new.php', 'page-new.php', 'page.php' ) ) ) )  {
+		if ( ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) && get_user_option( 'rich_editing' ) == 'true' && ( in_array( $pagenow, array( 'post.php', 'post-new.php', 'page-new.php', 'page.php' ) ) ) )  {
 		  	
 		  	// Add the tinyMCE buttons and plugins.
 			add_filter( 'mce_buttons', array( &$this, 'filter_mce_buttons' ) );
 			add_filter( 'mce_external_plugins', array( &$this, 'filter_mce_external_plugins' ) );
 			
 			// Register the colourpicker JavaScript.
-			wp_register_script( 'woo-colourpicker', $this->framework_url() . 'js/colorpicker.js', array( 'jquery' ), '3.6', true ); // Loaded into the footer.
+			wp_register_script( 'woo-colourpicker', esc_url( $this->framework_url() . 'js/colorpicker.js' ), array( 'jquery' ), '3.6', true ); // Loaded into the footer.
 			wp_enqueue_script( 'woo-colourpicker' );
 			
 			// Register the colourpicker CSS.
-			wp_register_style( 'woo-colourpicker', $this->framework_url() . 'css/colorpicker.css' );
+			wp_register_style( 'woo-colourpicker', esc_url( $this->framework_url() . 'css/colorpicker.css' ) );
 			wp_enqueue_style( 'woo-colourpicker' );
 			
 			// Register the custom CSS styles.
-			wp_register_style( 'woo-shortcode-generator', $this->framework_url() . 'css/shortcode-generator.css' );
+			wp_register_style( 'woo-shortcode-generator', esc_url( $this->framework_url() . 'css/shortcode-generator.css' ) );
 			wp_enqueue_style( 'woo-shortcode-generator' );
 			
 		} // End IF Statement
@@ -107,7 +106,7 @@ class WooThemes_Shortcode_Generator {
 	
 	function filter_mce_external_plugins( $plugins ) {
 		
-        $plugins['WooThemesShortcodes'] = $this->framework_url() . 'js/shortcode-generator/editor_plugin.js';
+        $plugins['WooThemesShortcodes'] = wp_nonce_url( esc_url( $this->framework_url() . 'js/shortcode-generator/editor_plugin.js' ), 'wooframework-shortcode-generator' );
         
         return $plugins;
         
@@ -126,9 +125,7 @@ class WooThemes_Shortcode_Generator {
 -----------------------------------------------------------------------------------*/
 
 function framework_url() {
-	
-	return trailingslashit( get_template_directory_uri() . '/' . basename( dirname( __FILE__ ) ) );
-
+	return esc_url( trailingslashit( get_template_directory_uri() . '/' . basename( dirname( __FILE__ ) ) ) );
 } // End framework_url()
 
 /*-----------------------------------------------------------------------------------
@@ -142,13 +139,12 @@ function framework_url() {
 -----------------------------------------------------------------------------------*/
 
 function ajax_action_check_url() {
-
 	$hadError = true;
 
 	$url = isset( $_REQUEST['url'] ) ? $_REQUEST['url'] : '';
 
 	if ( strlen( $url ) > 0  && function_exists( 'get_headers' ) ) {
-			
+		$url = esc_url( $url );
 		$file_headers = @get_headers( $url );
 		$exists       = $file_headers && $file_headers[0] != 'HTTP/1.1 404 Not Found';
 		$hadError     = false;
@@ -157,23 +153,21 @@ function ajax_action_check_url() {
 	echo '{ "exists": '. ($exists ? '1' : '0') . ($hadError ? ', "error" : 1 ' : '') . ' }';
 
 	die();
-	
 } // End ajax_action_check_url()
 
 /*-----------------------------------------------------------------------------------
-  shortcode_testing()
+  ajax_action_generate_nonce()
   
-  * Used for testing that the shortcodes are functioning.
+  * Generate a nonce.
+  *
+  * NOTE: For users that are not logged in this is not called.
+  * The client recieves <code>-1</code> in that case.
 -----------------------------------------------------------------------------------*/
 
-function shortcode_testing( $atts, $content = null ) {
-	
-	if ($content === null) return '';
-	
-	return '<strong>Working: ' . $content . '</strong>' . "\n";
-	
-} // End shortcode_testing()
-
+function ajax_action_generate_nonce() {
+	echo wp_create_nonce( 'wooframework-shortcode-generator' );
+	die();
+} // End ajax_action_generate_nonce()
 } // End Class
 
 /*-----------------------------------------------------------------------------------

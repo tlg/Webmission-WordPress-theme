@@ -14,57 +14,45 @@ TABLE OF CONTENTS
 
 -----------------------------------------------------------------------------------*/
 
-jQuery(document).ready(function() {
+/*-----------------------------------------------------------------------------------*/
+/* Detect and adjust the heights of the main columns to match */
+/*-----------------------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------------------------
-  Detect and adjust the heights of the main columns to match.
------------------------------------------------------------------------------------*/
+jQuery( window ).load( function () {
 
 	// Detect the heights of the two main columns.
 	
 	var content;
-	content = jQuery("#main");
+	content = jQuery( '#main' );
 	
 	var contentHeight = content.height();
 	
 	var sidebar;
-	sidebar = jQuery("#sidebar");
+	sidebar = jQuery( '#sidebar' );
 	
 	var sidebarHeight = sidebar.height();
-
-	// Adjust the heights to match.
-
-	var tabs;
-	tabs = jQuery("#sidebar #tabs").height();
-	tabs = tabs/3*2;
-	sidebarHeight -= tabs;
 	
 	// Determine the ideal new sidebar height.
 	
 	var newSidebarHeight;
 	var contentPadding;
+	var sidebarPadding;
 	
 	contentPadding = parseInt( content.css( 'padding-top' ) ) + parseInt( content.css( 'padding-bottom' ) );
+	sidebarPadding = parseInt( sidebar.css( 'padding-top' ) ) + parseInt( sidebar.css( 'padding-bottom' ) );
 	
 	if( contentHeight < sidebarHeight ) {
 	
-		content.height(sidebarHeight);
-		
-		newSidebarHeight = sidebarHeight + contentPadding;
+		content.height( sidebarHeight + sidebarPadding );
+		sidebar.height( sidebarHeight + contentPadding );
 	
 	} // End IF Statement
 	
 	if( contentHeight > sidebarHeight ) {
 	
-		sidebar.height(contentHeight);
-		
-		newSidebarHeight = contentHeight + contentPadding;
+		sidebar.height( contentHeight + contentPadding );
+		content.height( contentHeight );
 	
 	} // End IF Statement
-	
-	newSidebarHeight = Math.ceil( newSidebarHeight );
-	
-	// Make the height of the sidebar the same as the container.
-	sidebar.css( 'height', String( newSidebarHeight + 'px' ) );
 
-}); // Do not remove this, or the sky will fall on your head.
+}); // End jQuery()

@@ -6,27 +6,6 @@ wooShortcodeMeta={
 			help:"Place your twitter username here. This would be http://twitter.com/<strong>woothemes</strong>."
 		}, 
 		{
-			label:"Button Color",
-			id:"button_color",
-			help:"Change the button color between the default blue and a grey option.",
-			controlType:"select-control", 
-			selectValues:['', 'grey'],
-			defaultValue: '', 
-			defaultText: 'blue (Default)'
-		},  
-		{
-			label:"Text Color",
-			id:"text_color",
-			controlType:"colourpicker-control",
-			help:"Values: &lt;empty&gt; for default or a color (e.g. red or #000000)."
-		},
-		{
-			label:"Link Color",
-			id:"link_color",
-			controlType:"colourpicker-control",
-			help:"Values: &lt;empty&gt; for default or a color (e.g. red or #000000)."
-		},
-		{
 			label:"Include Counter",
 			id:"count",
 			help:"Show your follower count.",
@@ -38,7 +17,7 @@ wooShortcodeMeta={
 		{
 			label:"Language",
 			id:"language",
-			help:"Select the language in which you want to display the button (English, French, German, Italian, Spanish, Korean, Japanese).",
+			help:"Select the language in which you want to display the button.",
 			controlType:"select-control", 
 			selectValues:['en', 'fr', 'de', 'it', 'es', 'ko', 'ja'],
 			defaultValue: '', 
@@ -66,6 +45,24 @@ wooShortcodeMeta={
 			selectValues:['', 'left', 'right'],
 			defaultValue: '', 
 			defaultText: 'none (Default)'
+		}, 
+		{
+			label:"Size",
+			id:"size",
+			help:"Specify the size of the button (medium or large)",
+			controlType:"select-control", 
+			selectValues:['', 'large'],
+			defaultValue: '', 
+			defaultText: 'medium (Default)'
+		}, 
+		{
+			label:"Show Screen Name",
+			id:"show_screen_name",
+			help:"Optionally hide the display of your screen name on the button.",
+			controlType:"select-control", 
+			selectValues:['', 'false'],
+			defaultValue: '', 
+			defaultText: 'true (Default)'
 		}
 		],
 		defaultContent:"",

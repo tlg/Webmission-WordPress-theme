@@ -56,6 +56,12 @@ wooShortcodeMeta={
 			defaultValue: 'arial', 
 			defaultText: 'arial (Default)'
 		}, 
+		{
+			label:"Locale",
+			id:"locale",
+			help:"Optionally set the language of the button (use the country code, eg: en_US (English) or de_DE (German).", 
+			defaultValue: ''
+		}, 
 		],
 		defaultContent:"",
 		shortcode:"fblike"

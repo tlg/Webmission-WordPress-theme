@@ -21,30 +21,36 @@ jQuery(function($) {
   Tabs shortcode
 -----------------------------------------------------------------------------------*/
 	
-	if ( jQuery( '.shortcode-tabs').length ) {	
+	if ( jQuery( '.shortcode-tabs' ).length ) {	
 		
-		jQuery( '.shortcode-tabs').each( function () {
+		jQuery( '.shortcode-tabs' ).each( function () {
 		
 			var tabCount = 1;
 		
-			jQuery(this).children( '.tab').each( function ( index, element ) {
+			jQuery(this).children( '.tab' ).each( function ( index, element ) {
 			
-				var idValue = jQuery(this).parents( '.shortcode-tabs').attr( 'id' );
+				var idValue = jQuery( this ).parents( '.shortcode-tabs' ).attr( 'id' );
 			
 				var newId = idValue + '-tab-' + tabCount;
 			
-				jQuery(this).attr( 'id', newId );
+				jQuery( this ).attr( 'id', newId );
 				
-				jQuery(this).parents( '.shortcode-tabs').find( 'ul.tab_titles').children( 'li').eq(index).find( 'a').attr( 'href', '#' + newId );
+				jQuery( this ).parents( '.shortcode-tabs' ).find( 'ul.tab_titles' ).children( 'li' ).eq( index ).find( 'a' ).attr( 'href', '#' + newId );
 				
 				tabCount++;
 			
 			});
 		
-			var thisID = jQuery(this).attr( 'id' );
+			var thisID = jQuery( this ).attr( 'id' );
 		
-			jQuery(this).tabs( { fx: { opacity: 'toggle', duration: 200 } } );
+			var tabber = jQuery( this ).tabs( { fx: { opacity: 'toggle', duration: 200 } } );
 		
+			// Check for a matching hash and select that tab if one is found.
+			var currentHash = window.location.hash;
+			currentHash = currentHash.replace( '#', '' );
+			if ( currentHash != '' ) {
+				tabber.tabs( 'select', currentHash );
+			}
 		});
 
 
