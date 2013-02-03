@@ -1251,8 +1251,8 @@ function woo_custom_navigation_output($args = array()) {
 								<span class="title"><?php echo $title; ?></span>
 								<span class="controls">
 								<span class="type"><?php echo $woo_custom_nav_menu_items->link_type; ?></span>
-								<a id="edit<?php echo $woo_custom_nav_menu_items->position; ?>" onclick="edititem(<?php echo $woo_custom_nav_menu_items->position; ?>)" value="<?php echo esc_attr( $woo_custom_nav_menu_items->position ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_bloginfo('template_directory'); ?>/functions/images/ico-edit.png" /></a>
-								<a id="remove<?php echo $woo_custom_nav_menu_items->position; ?>" onclick="removeitem(<?php echo $woo_custom_nav_menu_items->position; ?>)" value="<?php echo esc_attr( $woo_custom_nav_menu_items->position ); ?>"><img class="remove" alt="Remove from Custom Menu" title="Remove from Custom Menu" src="<?php echo get_bloginfo('template_directory'); ?>/functions/images/ico-close.png" /></a>
+								<a id="edit<?php echo $woo_custom_nav_menu_items->position; ?>" onclick="edititem(<?php echo $woo_custom_nav_menu_items->position; ?>)" value="<?php echo esc_attr( $woo_custom_nav_menu_items->position ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-edit.png" /></a>
+								<a id="remove<?php echo $woo_custom_nav_menu_items->position; ?>" onclick="removeitem(<?php echo $woo_custom_nav_menu_items->position; ?>)" value="<?php echo esc_attr( $woo_custom_nav_menu_items->position ); ?>"><img class="remove" alt="Remove from Custom Menu" title="Remove from Custom Menu" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-close.png" /></a>
 								<a id="view<?php echo $woo_custom_nav_menu_items->position; ?>" target="_blank" href="<?php echo $link; ?>"><img alt="View Page" title="View Page" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-viewpage.png" /></a>
 								</span>
 							</dt>
@@ -1484,8 +1484,8 @@ function woo_custom_navigation_sub_items($post_id,$type,$table_name,$output_type
 								<span class="title"><?php echo esc_html( $title ); ?></span>
 								<span class="controls">
 								<span class="type"><?php echo $sub_item->link_type; ?></span>
-								<a id="edit<?php echo esc_attr( $counter ); ?>" onclick="edititem(<?php echo $counter; ?>)" value="<?php echo esc_attr( $counter ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_bloginfo('template_directory'); ?>/functions/images/ico-edit.png" /></a>
-								<a id="remove<?php echo esc_attr( $counter ); ?>" onclick="removeitem(<?php echo $counter; ?>)" value="<?php echo esc_attr( $counter ); ?>"><img class="remove" alt="Remove from Custom Menu" title="Remove from Custom Menu" src="<?php echo get_bloginfo('template_directory'); ?>/functions/images/ico-close.png" /></a>
+								<a id="edit<?php echo esc_attr( $counter ); ?>" onclick="edititem(<?php echo $counter; ?>)" value="<?php echo esc_attr( $counter ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-edit.png" /></a>
+								<a id="remove<?php echo esc_attr( $counter ); ?>" onclick="removeitem(<?php echo $counter; ?>)" value="<?php echo esc_attr( $counter ); ?>"><img class="remove" alt="Remove from Custom Menu" title="Remove from Custom Menu" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-close.png" /></a>
 								<a id="view<?php echo esc_attr( $counter ); ?>" target="_blank" href="<?php echo $link; ?>"><img alt="View Page" title="View Page" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-viewpage.png" /></a>
 								</span>
 							</dt>
@@ -1603,7 +1603,7 @@ function woo_get_pages($counter,$type) {
 						<span class="title"><?php echo $post->post_title; ?></span>
 						<span class="controls">
 							<span class="type">page</span>
-							<a id="edit<?php echo esc_attr( $intCounter ); ?>" onclick="edititem(<?php echo esc_attr( $intCounter ); ?>)" value="<?php echo esc_attr( $intCounter ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_bloginfo('template_directory'); ?>/functions/images/ico-edit.png" /></a>
+							<a id="edit<?php echo esc_attr( $intCounter ); ?>" onclick="edititem(<?php echo esc_attr( $intCounter ); ?>)" value="<?php echo esc_attr( $intCounter ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-edit.png" /></a>
 							<<a id="remove<?php echo esc_attr( $intCounter ); ?>" onclick="removeitem(<?php echo esc_attr( $intCounter ); ?>)" value="<?php echo esc_attr( $intCounter ); ?>">
 								<img class="remove" alt="Remove from Custom Menu" title="Remove from Custom Menu" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-close.png" />
 							</a>
@@ -1738,7 +1738,7 @@ function woo_get_categories($counter, $type) {
 			            	<span class="title"><?php echo $cat_item->cat_name; ?></span>
 							<span class="controls">
 							<span class="type">category</span>
-							<a id="edit<?php echo $intCounter; ?>" onclick="edititem(<?php echo $intCounter; ?>)" value="<?php echo esc_attr( $intCounter ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_bloginfo('template_directory'); ?>/functions/images/ico-edit.png" /></a>
+							<a id="edit<?php echo $intCounter; ?>" onclick="edititem(<?php echo $intCounter; ?>)" value="<?php echo esc_attr( $intCounter ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-edit.png" /></a>
 							<a id="remove<?php echo $intCounter; ?>" onclick="removeitem(<?php echo $intCounter; ?>)" value="<?php echo esc_attr( $intCounter ); ?>">
 								<img class="remove" alt="Remove from Custom Menu" title="Remove from Custom Menu" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-close.png" />
 							</a>
@@ -1803,7 +1803,7 @@ function woo_get_categories($counter, $type) {
 	        			$description = htmlspecialchars(addslashes(strip_tags(trim($str_converted))), ENT_QUOTES, 'UTF-8' );
 	        			?>
 	        			<?php $templatedir = get_template_directory_uri(); ?>
-						<span class="title"><?php echo esc_html( $cat_item->cat_name ); ?></span> <a onclick="appendToList('<?php echo $templatedir; ?>','Category','<?php echo $post_text; ?>','<?php echo $post_url; ?>','<?php echo $post_id; ?>','<?php echo $post_parent_id ?>','<?php echo $description; ?>')" name="<?php echo $post_text; ?>" value="<?php echo esc_attr( $post_url );  ?>"><img alt="Add to Custom Menu" title="Add to Custom Menu"  src="<?php echo get_bloginfo('template_directory'); ?>/functions/images/ico-add.png" /></a> </dt>
+						<span class="title"><?php echo esc_html( $cat_item->cat_name ); ?></span> <a onclick="appendToList('<?php echo $templatedir; ?>','Category','<?php echo $post_text; ?>','<?php echo $post_url; ?>','<?php echo $post_id; ?>','<?php echo $post_parent_id ?>','<?php echo $description; ?>')" name="<?php echo $post_text; ?>" value="<?php echo esc_attr( $post_url );  ?>"><img alt="Add to Custom Menu" title="Add to Custom Menu"  src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-add.png" /></a> </dt>
 						</dl>
 						<?php $parentli = $cat_item->cat_ID; ?>
 			            <?php $intCounter++; ?>
@@ -1928,7 +1928,7 @@ function woo_custom_navigation_default_sub_items($childof, $intCounter, $parentl
 						<span class="title"><?php echo $title; ?></span>
 							<span class="controls">
 							<span class="type"><?php echo $linktype; ?></span>
-							<a id="edit<?php echo esc_attr( $counter ); ?>" onclick="edititem(<?php echo $counter; ?>)" value="<?php echo esc_attr( $counter ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_bloginfo('template_directory'); ?>/functions/images/ico-edit.png" /></a>
+							<a id="edit<?php echo esc_attr( $counter ); ?>" onclick="edititem(<?php echo $counter; ?>)" value="<?php echo esc_attr( $counter ); ?>"><img class="edit" alt="Edit Menu Item" title="Edit Menu Item" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-edit.png" /></a>
 								<a id="remove<?php echo esc_attr( $counter ); ?>" onclick="removeitem(<?php echo $counter; ?>)" value="<?php echo esc_attr( $counter ); ?>">
 									<img class="remove" alt="Remove from Custom Menu" title="Remove from Custom Menu" src="<?php echo get_template_directory_uri(); ?>/functions/images/ico-close.png" />
 								</a>

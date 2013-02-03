@@ -36,7 +36,6 @@ function woo_themeoptions_redirect () {
 /*-----------------------------------------------------------------------------------*/
 /* Flush rewrite rules to refresh permalinks for custom post types, etc. */
 /*-----------------------------------------------------------------------------------*/
-add_action( 'admin_head', 'woo_flush_rewriterules', 9 );
 
 function woo_flush_rewriterules () {
 	flush_rewrite_rules();
@@ -234,11 +233,11 @@ if ( ! function_exists( 'woo_head_css' ) ) {
 					if($option['id'] == 'woo_texttitle') {
 						// Add CSS to output
 						if ( $text_title == "true" ) {
-							$output .= '#logo img { display:none; } #logo .site-title { display:block; }' . "\n";
+							$output .= '#logo img { display:none; } .site-title { display:block!important; }' . "\n";
 							if ( $tagline == "false" )
-								$output .= '#logo .site-description { display:none; }' . "\n";
+								$output .= '.site-description { display:none!important; }' . "\n";
 							else
-								$output .= '#logo .site-description { display:block; }' . "\n";
+								$output .= '.site-description { display:block!important; }' . "\n";
 						}
 					}
 				}

@@ -2,7 +2,10 @@
 /* WooThemes admin styles */
 /*-------------------------------------------------------------------------------------------*/
 
-.updated, .error {display:none!important} /* disable the admin notices */
+.updated, .error { display: none !important; } /* disable the admin notices */
+#wooframework_important_update.error { display: block !important; }
+#wooframework_update.updated { display: block !important; }
+#theme_update.updated { display: block !important; } /* Except for the theme update notifier */
 
 #woo_container  { margin: 15px; width: 827px; position:relative; z-index: 0 }
 
@@ -20,7 +23,8 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 #woo_container #header .theme-info .framework  { font-size: 12px; }
 #woo_container #header .theme-info b { font-size: 11px; text-transform: none; color: #444; font-weight: 100; }
 
-#woo_container #support-links  { height: 32px; padding: 0 0 0 15px; background-color: #d7e6f2; border-top: 1px solid #f1f6fa; border-bottom: 1px solid #a4bbcd; border-left: 1px solid #d8d8d8; border-right: 1px solid #d8d8d8; }
+#woo_container #support-links { height: 32px; padding: 0 0 0 15px; background-color: #d7e6f2; border-top: 1px solid #f1f6fa; border-bottom: 1px solid #a4bbcd; border-left: 1px solid #d8d8d8; border-right: 1px solid #d8d8d8; }
+#woo_container #support-links ul { margin: 0; }
 #woo_container #support-links ul li  { display: inline; margin: 0 6px 0 0; }
 #woo_container #support-links ul li a:link, #support-links ul li a:visited  { line-height: 32px; font-size: 10px; font-weight: bold; text-transform: uppercase; text-decoration: none; color: #21759b; text-shadow: 1px 1px 0 #fff; }
 #woo_container #support-links ul li a:hover  { color: #155876; }
@@ -32,14 +36,18 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 #woo_container #main  { background-color: #f1f1f1; border-left: 1px solid #d8d8d8; border-right: 1px solid #d8d8d8; border-bottom: 1px solid #d8d8d8; }
 
 #woo_container #woo-nav  { float: left; position: relative; z-index: 9999; width: 190px; }
+#woo_container #woo-nav ul { margin:0; }
 #woo_container #woo-nav li { margin-bottom:0}
 #woo_container #woo-nav ul li a:link, #woo-nav ul li a:visited  { display: block; padding: 10px 10px 10px 15px; font:bold 12px/18px sans-serif; text-decoration: none; color: #797979; border-bottom: 1px solid #d8d8d8; border-top:1px solid #fff; text-shadow: 0 1px 0 #fff; }
 #woo_container #woo-nav ul li.current a, #woo-nav ul li a:hover  { color: #21759b; background-color: #fff; }
 
-#woo_container #content  { float: left; min-height: 650px; width: 595px; margin-left: -1px; padding: 0 20px; font-family: "Lucida Grande", Verdana,  sans-serif; background-color: #fff; border-left: 1px solid #d8d8d8; }
+#woo_container #content  { float: left; min-height: 650px; width: 595px; margin-left: -1px; padding: 0 20px; font-family: sans-serif; background-color: #fff; border-left: 1px solid #d8d8d8; }
 
-#woo_container #content .section { margin-bottom: 10px;}
-#woo_container #content .section h3.heading  { font-size:1.1em; margin: 10px 0 10px 0; padding: 7px 0px; /* background: #f1f1f1 url(images/headingtop.jpg) repeat-x left top; */ border-bottom: 1px solid #e7e7e7; }
+#woo_container #content .group h1 { display:none; padding: 20px 0; margin: 0 0 20px; font-size: 23px; color:#464646; font-weight:normal; border-bottom: 1px solid #e0e0e0; }
+
+#woo_container #content .section { margin-bottom: 10px; border-bottom: 1px solid #E7E7E7; padding-bottom:15px; }
+#woo_container #content .section h3.heading  { font-size:1.1em; margin: 15px 0 5px; padding: 7px 0px; }
+#woo_container #content .section.section-info { border-bottom: none; margin:0; padding:0; }
 #woo_container #content .section .controls  { float: left; width: 345px; margin: 0 15px 0 0; }
 #woo_container #content .section .explain  { float: left; width: 225px; padding: 0 10px 0 0; font-size: 11px; color: #999999; font-family: sans-serif; }
 
@@ -51,7 +59,7 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 
 #woo_container #content .section-info  h3.heading {
  font-size: 12px; font-weight: 100; border: 0; margin-top: 20px; letter-spacing: 1px;  border-top: 1px solid #FFF298; margin-bottom: 0; background:#EFE186; padding: 10px 20px; }
-#woo_container #content .section-info  .controls { margin: 0 0 20px; padding: 15px 20px; width: auto; line-height: 1.5em; font-size: 14px; font-style: italic; font-family: Georgia,arial; background: #FFF298; border:1px solid #ECD852; color:#424242;}
+#woo_container #content .section-info  .controls { margin: 0 0 10px; padding: 15px 20px; width: auto; line-height: 1.5em; font-size: 14px; font-style: italic; font-family: Georgia, serif; background: #FFF298; border:1px solid #ECD852; color:#424242;}
 #woo_container #content .section-info  .controls small { font-size: 12px}
 
 #woo_container #content .section-info  h3.heading {
@@ -79,15 +87,17 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
     border-color: #CCCCCC #EEEEEE #EEEEEE #CCCCCC;
     width: 340px;
     padding: 5px;
-    font-family: "Lucida Grande", Verdana,  sans-serif;
+    font-family: sans-serif;
     font-size: 12px;
     color:#555;
 }
 #woo_container .controls input:hover,#woo_container .controls select:hover,#woo_container .controls textarea:hover { color:#333; background: #fff;}
 
-#woo_container .controls input.upload { width:280px; padding-bottom:6px; }
+#woo_container .controls input.upload { width:279px; padding-bottom:6px; }
 #woo_container .controls input.upload_button{ float:right; width:45px; border-color:#BBBBBB; cursor:pointer; height:16px; }
 #woo_container .controls input.upload_button:hover { border-color:#666666; color:#000; }
+
+#woo_container .section-upload_min .controls input.upload_button { float: left; }
 
 #woo_container .screenshot {
 	float:left;
@@ -111,7 +121,7 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 	padding:4px;
 }
 
-#woo_container .screenshot .mlu_remove { 
+#woo_container .screenshot .mlu_remove, #woo_container .typography-preview-container .preview_remove { 
 
 	background:url( "images/ico-delete.png") no-repeat;
 	border:medium none;
@@ -151,7 +161,7 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
       -moz-border-radius: 4px;
       -webkit-border-radius: 4px;
       border-radius: 4px;
-      font-family: "Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;
+      font-family: sans-serif;
       font-size: 12px;
       background: #fafafa url(images/select.png) no-repeat right center;
       border-color: #ccc #eee #eee #ccc;
@@ -185,7 +195,7 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 
 #woo_container .colorSelector { margin-top:1px; }
 #woo_container .colorSelector:hover { cursor:pointer; }
-#woo_container .controls select { padding: 4px; width: 340px }
+#woo_container .controls select { padding: 6px 4px; width: 340px }
 #woo_container .controls select:hover { cursor: pointer;}
 #woo_container .controls textarea {width: 345px; }
 
@@ -200,15 +210,23 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 #woo_container .controls .input-text-small { width: 60px; margin-right:10px}
 #woo_container .meta-two { margin-right:10px}
 
-#woo_container .controls .woo-color {float:left; width: 80px; margin-left:5px; /* font-size:20px; height:34px;*/}
+#woo_container .controls .woo-color {float:left; width: 70px; margin-left:5px; /* font-size:20px; height:34px;*/}
 
-#woo_container #content .section-typography .controls  { width:425px }
-#woo_container #content .section-typography .explain  { width:140px }
+#woo_container #content .section-typography .controls  { width:440px }
+#woo_container #content .section-typography .explain  { width:120px }
 
 #woo_container .controls .woo-typography-size { width:50px; float:left}
 #woo_container .controls .woo-typography-unit { width:50px; float:left}
-#woo_container .controls .woo-typography-face { width:120px; float:left}
+#woo_container .controls .woo-typography-face { width:100px; float:left}
 #woo_container .controls .woo-typography-style { width:80px; float:left}
+#woo_container .controls .woo-typography-preview-button { float: left; margin: 3px 0 0 5px; }
+#woo_container .controls .woo-typography-preview-button span { background: transparent url(images/ico-preview.png) no-repeat center center; display: block; text-indent: -9999px; width: 14px; height: 16px; }
+#woo_container .controls .woo-typography-preview-button span.refresh { background-image: url(images/ico-refresh.png); }
+#woo_container .typography-preview-container { clear: both; }
+#woo_container .typography-preview-container .preview_remove { position: relative; float: right; margin-bottom: -10px; margin-right: -10px; z-index: 99; }
+#woo_container .typography-preview { word-wrap: break-word; clear: both; padding: 20px; border: 1px solid #CCCCCC; background: #FDFDFD; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+
+.wf-loading #woo_container .typography-preview.current { background: #FDFDFD url(images/loading-bottom.gif) no-repeat 560px center; } /* Class is dynamically added to the "html" tag. */
 
 #woo_container .controls .woo-radio-img-img { border:3px solid #dedede; margin:0 5px 10px 0; display:none; cursor:pointer; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 #woo_container .controls .woo-radio-img-selected { border:3px solid #aaa; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
@@ -218,7 +236,6 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 
 
 #woo_container .group { padding-bottom:20px}
-#woo_container .group h2 { display:none;  border-bottom:3px solid #e7e7e7}
 
 #woo_container input:focus,#woo_container select:focus, #woo_container textarea:focus { background:#fff;}
 
@@ -301,7 +318,7 @@ box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset -1px -1px 0 rgba(255,255
 /* FEEDS PAGE */
 /*-------------------------------------------------------------------------------------------*/
 
-		.themes-page div.info { height:30px;}
+		.themes-page div.info { height: 30px; margin-top: 10px; }
 		.themes-page div.info a {  float:left; margin: 0 10px 0 0; padding:3px 10px; background:#D7E6F2; -moz-border-radius:4px}
 		.themes-page div.info a:link,
 		.themes-page div.info a:visited { color:#21759B; font-size:10px; font-weight:bold; text-decoration:none; text-shadow:1px 1px 0 #FFFFFF;}
@@ -423,7 +440,6 @@ ul#woo-sbm-menu_ul li a span { color: #999; }
 #woo_container #woo-sbm-builder-part-assign { display: none}
 #woo_container #woo-sbm-builder-message { display:block; font-size: 11px; padding: 10px 0; cursor: pointer; text-decoration: underline; color:green; font-weight: 700;}
 #woo_container #woo-sbm-builder-message:hover { text-decoration: none;}
-#woo_container .last { border-bottom: 0px!important;}
 #woo_container .woo-sbm-controls {height:20px; margin-top: 15px}
 #woo_container .woo-sbm-controls .button { float:right}
 
@@ -666,6 +682,7 @@ body.js .item-order {
 #woo_container #woo-nav ul li.post a { background-image:url(images/option-icon-post.png); background-repeat: no-repeat; background-position: 15px center; padding-left:40px; }
 #woo_container #woo-nav ul li.connect a { background-image:url(images/option-icon-connect.png); background-repeat: no-repeat; background-position: 15px center; padding-left:40px; }
 #woo_container #woo-nav ul li.wpsc_presentation a { background-image:url(images/option-icon-cart.png); background-repeat: no-repeat; background-position: 15px center; padding-left:40px; }
+#woo_container #woo-nav ul li.presstrends a { background-image:url(images/option-icon-presstrends.png); background-repeat: no-repeat; background-position: 15px center; padding-left:40px; }
 
 
 /*-------------------------------------------------------------------------------------------*/

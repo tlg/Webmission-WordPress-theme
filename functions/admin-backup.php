@@ -504,17 +504,23 @@ class WooThemes_Backup {
 				
 				// Theme Options
 				$options = get_option( 'woo_template' );
-				$query = $this->add_to_export_query( $options, $count );
 				
-				$query_inner .= $query['string'];
-				$count = $query['count'];
+				if ( is_array( $options ) ) {
+					$query = $this->add_to_export_query( $options, $count );
+					
+					$query_inner .= $query['string'];
+					$count = $query['count'];
+				}
 				
 				// SEO Settings
 				$options = get_option( 'woo_seo_template' );
-				$query = $this->add_to_export_query( $options, $count );
 				
-				$query_inner .= $query['string'];
-				$count = $query['count'];
+				if ( is_array( $options ) ) {
+					$query = $this->add_to_export_query( $options, $count );
+					
+					$query_inner .= $query['string'];
+					$count = $query['count'];
+				}
 				
 				// Sidebar Manager
 				
@@ -528,28 +534,32 @@ class WooThemes_Backup {
 				// Framework Settings
 				$options = get_option( 'woo_framework_template' );
 				
-				// Remove the "framework_woo_export_options" and "framework_woo_import_options" items before constructing the query.
-				foreach ( (array) $options as $k => $v ) {
-					if ( isset( $options[$k]['id'] ) && in_array( $options[$k]['id'], array( 'framework_woo_import_options', 'framework_woo_export_options' ) ) ) {
-						unset( $options[$k] );
+				if ( is_array( $options ) ) {
+					// Remove the "framework_woo_export_options" and "framework_woo_import_options" items before constructing the query.
+					foreach ( (array) $options as $k => $v ) {
+						if ( isset( $options[$k]['id'] ) && in_array( $options[$k]['id'], array( 'framework_woo_import_options', 'framework_woo_export_options' ) ) ) {
+							unset( $options[$k] );
+						}
 					}
+					
+					$query = $this->add_to_export_query( $options, $count );
+					
+					$query_inner .= $query['string'];
+					$count = $query['count'];
 				}
-				
-				$query = $this->add_to_export_query( $options, $count );
-				
-				$query_inner .= $query['string'];
-				$count = $query['count'];
-			
 			break;
 		
 			// Theme Options
 			case 'theme':
 			
 				$options = get_option( 'woo_template' );
-				$query = $this->add_to_export_query( $options, $count );
 				
-				$query_inner .= $query['string'];
-				$count = $query['count'];
+				if ( is_array( $options ) ) {
+					$query = $this->add_to_export_query( $options, $count );
+					
+					$query_inner .= $query['string'];
+					$count = $query['count'];
+				}
 			
 			break;
 			
@@ -557,10 +567,13 @@ class WooThemes_Backup {
 			case 'seo':
 			
 				$options = get_option( 'woo_seo_template' );
-				$query = $this->add_to_export_query( $options, $count );
 				
-				$query_inner .= $query['string'];
-				$count = $query['count'];
+				if ( is_array( $options ) ) {
+					$query = $this->add_to_export_query( $options, $count );
+					
+					$query_inner .= $query['string'];
+					$count = $query['count'];
+				}
 			
 			break;
 			
@@ -581,17 +594,19 @@ class WooThemes_Backup {
 			
 				$options = get_option( 'woo_framework_template' );
 				
-				// Remove the "framework_woo_export_options" and "framework_woo_import_options" items before constructing the query.
-				foreach ( (array) $options as $k => $v ) {
-					if ( isset( $options[$k]['id'] ) && in_array( $options[$k]['id'], array( 'framework_woo_import_options', 'framework_woo_export_options' ) ) ) {
-						unset( $options[$k] );
+				if ( is_array( $options ) ) {
+					// Remove the "framework_woo_export_options" and "framework_woo_import_options" items before constructing the query.
+					foreach ( (array) $options as $k => $v ) {
+						if ( isset( $options[$k]['id'] ) && in_array( $options[$k]['id'], array( 'framework_woo_import_options', 'framework_woo_export_options' ) ) ) {
+							unset( $options[$k] );
+						}
 					}
+					
+					$query = $this->add_to_export_query( $options, $count );
+					
+					$query_inner .= $query['string'];
+					$count = $query['count'];
 				}
-				
-				$query = $this->add_to_export_query( $options, $count );
-				
-				$query_inner .= $query['string'];
-				$count = $query['count'];
 			
 			break;
 		}

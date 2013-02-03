@@ -207,7 +207,7 @@ function express_uploadFile($args) {
 
 	if ( !current_user_can('upload_files') ) {
 		logIO('O', '(MW) User does not have upload_files capability');
-		return new IXR_Error(401, __('You are not allowed to upload files to this site.'));
+		return new IXR_Error(401, __('You are not allowed to upload files to this site.', 'woothemes'));
 	}
 
 	if ( $upload_err = apply_filters( "pre_upload_error", false ) )
@@ -233,7 +233,7 @@ function express_uploadFile($args) {
 
 	$upload = wp_upload_bits($name, $type, $bits);
 	if ( ! empty($upload['error']) ) {
-		$errorString = sprintf(__('Could not write file %1$s (%2$s)'), $name, $upload['error']);
+		$errorString = sprintf(__('Could not write file %1$s (%2$s)', 'woothemes'), $name, $upload['error']);
 		logIO('O', '(MW) ' . $errorString);
 		return new IXR_Error(500, $errorString);
 	}

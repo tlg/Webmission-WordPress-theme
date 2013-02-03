@@ -73,6 +73,12 @@ function woothemes_framework_settings_page(){
 									"id" => $shortname."_theme_version_checker",
 									"std" => "",
 									"type" => "checkbox" );
+									
+	$framework_options[] = array( 	"name" => "WooFramework Update Notification",
+									"desc" => "This will enable notices on your theme options page that there is an update available for the WooFramework.",
+									"id" => $shortname."_framework_version_checker",
+									"std" => "",
+									"type" => "checkbox" );
 
 	$framework_options[] = array( 	"name" => "Theme Settings",
 									"icon" => "general",
@@ -123,6 +129,7 @@ function woothemes_framework_settings_page(){
 									"id" => $shortname."_custom_login_logo",
 									"std" => "",
 									"type" => "upload" );
+
 /*
 	$framework_options[] = array( 	"name" => "Font Stacks (Beta)",
 									"icon" => "typography",
@@ -158,6 +165,25 @@ function woothemes_framework_settings_page(){
 									"std" => "",
 									"type" => "checkbox" );
 
+	}
+
+	// PressTrends Integration
+	if ( defined( 'WOO_PRESSTRENDS_THEMEKEY' ) ) {
+		$framework_options[] = array( 	"name" => "PressTrends",
+									"icon" => "presstrends",
+									"type" => "heading" );
+									
+		$framework_options[] = array( 	"name" => "Disable PressTrends Tracking",
+									"desc" => "Disable sending of usage data to PressTrends.",
+									"id" => $shortname."_presstrends_disable",
+									"std" => "false",
+									"type" => "checkbox" );
+	
+		$framework_options[] = array( 	"name" => "What is PressTrends?",
+									"desc" => "",
+									"id" => $shortname."_presstrends_info",
+									"std" => 'PressTrends is a simple usage tracker that allows us to see how our customers are using WooThemes themes - so that we can help improve them for you. <strong>None</strong> of your personal data is sent to PressTrends.<br /><br />For more information, please view the PressTrends <a href="http://presstrends.io/privacy" target="_blank">privacy policy</a>.',
+									"type" => "info" );
 	}
 
     update_option( 'woo_framework_template', $framework_options );

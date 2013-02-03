@@ -24,13 +24,13 @@ wooShortcodeMeta={
 			defaultText: 'none (Default)'
 		}, 
 		{
-			label:"Include Counter",
-			id:"count",
-			help:"Show the counter of users who '+1' your URL.",
+			label:"Annotation",
+			id:"annotation",
+			help:"Optionally show the counter of users who '+1' your URL, either as inline text or in a bubble.",
 			controlType:"select-control", 
-			selectValues:['false', ''],
-			defaultValue: '', 
-			defaultText: 'true (Default)'
+			selectValues:['none', 'bubble', 'inline'],
+			defaultValue: 'none', 
+			defaultText: 'none (Default)'
 		}, 
 		{
 			label:"Language",
@@ -82,8 +82,8 @@ wooShortcodeMeta={
 							'Ukrainian', 
 							'Vietnamese'
 						],
-			defaultValue: 'en-US', 
-			defaultText: 'en-US (Default)'
+			defaultValue: 'English (UK)', 
+			defaultText: 'English (UK) (Default)'
 		}, 
 		{
 			label:"JavaScript Callback Function",

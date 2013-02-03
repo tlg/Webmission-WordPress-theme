@@ -280,65 +280,65 @@ function woo_sbm_sidebar($current_sidebar_id){
 					if( $type == 'hierarchy' && ! $_is_replaced ) {
 
 						if($id == 'front_page')
-							if(is_front_page())
+							if( is_front_page() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'home')
-							if(is_home())
+							if( is_home() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'single')
-							if(is_single())
+							if( is_single() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'page')
-							if(is_page())
+							if( is_page() )
 								if ( ! in_array( 'woo_sbm_page_' . $post->ID . '_' . $sidebar_to_replace, array_keys( $woo_sbm_options['sidebars'] ) ) )
 									if($sidebar_to_replace == $current_sidebar_id)
 										$current_sidebar_id = $sidebar_id;
 
 						if($id == 'singular')
-							if(is_singular())
+							if( is_singular() )
 								if($sidebar_to_replace == $current_sidebar_id)
 								$current_sidebar_id = $sidebar_id;
 						if($id == 'date')
-							if(is_date())
+							if( is_date() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'archive')
-							if(is_archive())
+							if( is_archive() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'category')
-							if(is_category())
+							if( is_category() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'tag')
-							if(is_tag())
+							if( is_tag() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'tax')
-							if(is_tax())
+							if( is_tax() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'author')
-							if(is_author())
+							if( is_author() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'search')
-							if(is_search())
+							if( is_search() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'paged')
-							if(is_paged())
+							if( is_paged() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == 'attach')
-							if(is_attach())
+							if( is_attachment() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 						if($id == '404')
-							if(is_404())
+							if( is_404() )
 								if($sidebar_to_replace == $current_sidebar_id)
 									$current_sidebar_id = $sidebar_id;
 
@@ -346,7 +346,7 @@ function woo_sbm_sidebar($current_sidebar_id){
 
 					if ( ( $type == '' || in_array( $type, $tax_keys ) ) ) {
 						$type_tax = $sidebar['conditionals']['type'];
-						if ($type_tax != '') {
+						if ( $type_tax != '' ) {
 
 							// Get taxonomy query object
 							global $wp_query;
@@ -360,16 +360,16 @@ function woo_sbm_sidebar($current_sidebar_id){
 								// CUSTOM TAXONOMIES
 								$wp_custom_taxonomy_args = array( '_builtin' => false );
 								$woo_wp_custom_taxonomies = array();
-								$woo_wp_custom_taxonomies = get_taxonomies($wp_custom_taxonomy_args,'objects' );
+								$woo_wp_custom_taxonomies = get_taxonomies( $wp_custom_taxonomy_args, 'objects' );
 								$sentinel = false;
-								foreach ($woo_wp_custom_taxonomies as $woo_wp_custom_taxonomy) {
+								foreach ( $woo_wp_custom_taxonomies as $woo_wp_custom_taxonomy ) {
 									// checks for match to taxonomy
-									if ($type_tax == $woo_wp_custom_taxonomy->name) {
+									if ( $type_tax == $woo_wp_custom_taxonomy->name ) {
 										$term_list = get_the_terms( 0, $woo_wp_custom_taxonomy->name  );
 										$term_results = '';
-										if ($term_list) {
-											foreach ($term_list as $term_item) {
-												if ( (is_tax($woo_wp_custom_taxonomy->name, $term_item->slug)) && ($id == $term_item->term_id) ) { $sentinel = true; } // End IF Statement
+										if ( $term_list ) {
+											foreach ( $term_list as $term_item ) {
+												if ( ( is_tax( $woo_wp_custom_taxonomy->name, $term_item->slug ) ) && ( $id == $term_item->term_id ) ) { $sentinel = true; } // End IF Statement
 											} // End FOREACH Loop
 										} // End IF Statement
 									} // End IF Statement

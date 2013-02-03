@@ -25,7 +25,7 @@
       });
       
       // Hide the delete button on the first row 
-      $( 'a.delete-inline', "#option-1").hide();
+      $( 'a.delete-inline', '#option-1' ).hide();
       
     }, // End removeFile
     
@@ -73,13 +73,11 @@
         // Display a custom title for each Thickbox popup.
         var woo_title = '';
         
-       if ( $(this).parents( '.section').find( '.heading') ) { woo_title = $(this).parents( '.section').find( '.heading').text(); } // End IF Statement
+       if ( $(this).parents( '.section' ).find( '.heading' ) ) { woo_title = $(this).parents( '.section' ).find( '.heading' ).text(); } // End IF Statement
+       
+       if ( woo_title == '' && $(this).parents( '.woo_metabox_fields' ).prev( 'th' ).find( 'label' ) ) { woo_title = $(this).parents( '.woo_metabox_fields' ).prev( 'th' ).find( 'label' ).text(); } // End IF Statement
         
-        // tb_show( woo_title, 'media-upload.php?post_id='+formID+'&type=image&amp;is_woothemes=yes&amp;woo_title=' + woo_title + '&amp;TB_iframe=1&amp;width=630&amp;height=500' );
-        
-        // tb_show( woo_title, 'media-upload.php?post_id='+formID+'&type=image&amp;is_woothemes=yes&amp;TB_iframe=1&amp;width=630&amp;height=500' );
-        
-        tb_show( woo_title, 'media-upload.php?post_id='+formID+'&amp;TB_iframe=1' );
+        tb_show( woo_title, 'media-upload.php?post_id='+formID+'&amp;title=' + woo_title + '&amp;is_woothemes=yes&amp;TB_iframe=1' );
         return false;
       });
             
@@ -119,18 +117,15 @@
           } else {
           	
           	// No output preview if it's not an image.
-          
             // btnContent = '';
             
             // Standard generic output if it's not an image.
-            
             html = '<a href="'+itemurl+'" target="_blank" rel="external">View File</a>';
             
             btnContent = '<div class="no_image"><span class="file_link">'+html+'</span><a href="#" class="mlu_remove button">Remove</a></div>';
           }
           
           $( '#' + formfield).val(itemurl);
-          // $( '#' + formfield).next().next( 'div').slideDown().html(btnContent);
           $( '#' + formfield).siblings( '.screenshot').slideDown().html(btnContent);
           tb_remove();
           

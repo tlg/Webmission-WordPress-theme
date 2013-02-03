@@ -1,5 +1,4 @@
 <?php
-
 /*-----------------------------------------------------------------------------------
 
 TABLE OF CONTENTS
@@ -47,6 +46,8 @@ TABLE OF CONTENTS
 	- woo_thumb_new_contents
 - woo_get_dynamic_values()
 - woo_get_posts_by_taxonomy()
+- If the user has specified a "posts page", load the "Blog" page template there
+- PressTrends API Integration
 -----------------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------------------------*/
@@ -85,6 +86,7 @@ Parameters:
 		$meta = Add a custom meta text to the image and anchor of the image.
 		$alignment = Crop alignment for thumb.php (l, r, t, b)
 		$size = Custom pre-defined size for WP Thumbnail (string)
+		$noheight = Don't output the height on img tag (for responsive designs)
 */
 
 if ( !function_exists('woo_image') ) {
@@ -117,6 +119,7 @@ function woo_image($args) {
 	$meta = '';
 	$alignment = '';
 	$size = '';
+	$noheight = '';
 
 	$alt = '';
 	$img_link = '';
@@ -303,8 +306,9 @@ function woo_image($args) {
 
     // Set output height and width
     $set_width = ' width="' . $width .'" ';
-    $set_height = ' height="' . $height .'" ';
-    if($height == null OR $height == '') $set_height = '';
+    $set_height = '';
+    if ( !$noheight )
+    	$set_height = ' height="' . $height .'" ';
 
 	// Set standard class
 	if ( $class ) $class = 'woo-image ' . $class; else $class = 'woo-image';
@@ -498,20 +502,22 @@ function woo_image($args) {
 
 if (!function_exists( 'woo_get_video_image')) {
 	function woo_get_video_image($embed) {
+	
+		$video_thumb = '';
 
 		// YouTube - get the video code if this is an embed code (old embed)
 		preg_match( '/youtube\.com\/v\/([\w\-]+)/', $embed, $match);
 
 		// YouTube - if old embed returned an empty ID, try capuring the ID from the new iframe embed
-		if($match[1] == '')
+		if( !isset($match[1]) )
 			preg_match( '/youtube\.com\/embed\/([\w\-]+)/', $embed, $match);
 
 		// YouTube - if it is not an embed code, get the video code from the youtube URL
-		if($match[1] == '')
+		if( !isset($match[1]) )
 			preg_match( '/v\=(.+)&/',$embed ,$match);
 
 		// YouTube - get the corresponding thumbnail images
-		if($match[1] != '')
+		if( isset($match[1]) )
 			$video_thumb = "http://img.youtube.com/vi/".$match[1]."/0.jpg";
 
 		// return whichever thumbnail image you would like to retrieve
@@ -601,8 +607,8 @@ if ( !function_exists( 'vt_resize') ) {
 				return $vt_image;
 			}
 
-			// $crop = false
-			if ( $crop == false ) {
+			// $crop = false or no height set
+			if ( $crop == false OR !$height ) {
 
 				// calculate the size proportionaly
 				$proportional_size = wp_constrain_dimensions( $image_src[1], $image_src[2], $width, $height );
@@ -626,9 +632,15 @@ if ( !function_exists( 'vt_resize') ) {
 			// check if image width is smaller than set width
 			$img_size = getimagesize( $file_path );
 			if ( $img_size[0] <= $width ) $width = $img_size[0];
+			
+			// Check if GD Library installed
+			if (!function_exists ('imagecreatetruecolor')) {
+			    echo 'GD Library Error: imagecreatetruecolor does not exist - please contact your webhost and ask them to install the GD library';
+			    return;
+			}
 
 			// no cache files - let's finally resize it
-			$new_img_path = image_resize( $file_path, $width, $height, $crop );
+			$new_img_path = image_resize( $file_path, $width, $height, $crop );			
 			$new_img_size = getimagesize( $new_img_path );
 			$new_img = str_replace( basename( $image_src[0] ), basename( $new_img_path ), $image_src[0] );
 
@@ -754,7 +766,9 @@ if ($custom_field) :
     $custom_field = preg_replace( '/height:([0-9]*)px/' , $height , $custom_field );
 
 	// Suckerfish menu hack
-	$custom_field = str_replace( '<embed ','<param name="wmode" value="transparent"></param><embed wmode="transparent" ',$custom_field);
+	$custom_field = str_replace( '<embed ', '<param name="wmode" value="transparent"></param><embed wmode="transparent" ',$custom_field);
+	$custom_field = str_replace( '<iframe ', '<iframe wmode="transparent" ',$custom_field);
+	$custom_field = str_replace( '" frameborder="', '?wmode=transparent" frameborder="',$custom_field);
 
 	$output = '';
     $output .= '<div class="'. $class .'">' . $custom_field . '</div>';
@@ -972,7 +986,7 @@ function browser_body_class($classes) {
 			$classes[] = 'ie8';
 			$classes[] = 'ie';
 		} elseif ($browser == "MSIE 9.0" ) {
-			$classes[] = 'ie8';
+			$classes[] = 'ie9';
 			$classes[] = 'ie';
 		} else {
 			$classes[] = 'ie';
@@ -1035,7 +1049,7 @@ if ( !function_exists( 'woo_twitter_script') ) {
 	    }
 	//-->!]]>
 	</script>
-	<script type="text/javascript" src="http://api.twitter.com/1/statuses/user_timeline/<?php echo $username; ?>.json?callback=twitterCallback2&amp;count=<?php echo $limit; ?>&amp;include_rts=t"></script>
+	<script type="text/javascript" src="http<?php if (is_ssl()) { echo 's'; } ?>://api.twitter.com/1/statuses/user_timeline/<?php echo $username; ?>.json?callback=twitterCallback2&amp;count=<?php echo $limit; ?>&amp;include_rts=t"></script>
 	<?php
 	}
 }
@@ -1071,9 +1085,16 @@ function woo_active_template($filename = null){
 /* WooFramework Update Page */
 /*-----------------------------------------------------------------------------------*/
 
-function woothemes_framework_update_page(){
+function woothemes_framework_update_page() {
+
+	// Clear transients.
+	delete_transient( 'woo_framework_critical_update' );
+	delete_transient( 'woo_framework_critical_update_data' );
+	delete_transient( 'wooframework_version_data' );
+
         $method = get_filesystem_method();
-        $to = ABSPATH . 'wp-content/themes/' . get_option( 'template') . "/functions/";
+        
+        $to = ABSPATH . 'wp-content/themes/' . get_option( 'template' ) . '/functions/';
         if(isset($_POST['password'])){
 
             $cred = $_POST;
@@ -1082,7 +1103,7 @@ function woothemes_framework_update_page(){
         }
         elseif(isset($_POST['woo_ftp_cred'])){
 
-             $cred = unserialize(base64_decode($_POST['woo_ftp_cred']));
+             $cred = unserialize($_POST['woo_ftp_cred']);
              $filesystem = WP_Filesystem($cred);
 
         } else {
@@ -1093,22 +1114,23 @@ function woothemes_framework_update_page(){
         $url = admin_url( 'admin.php?page=woothemes_framework_update' );
         ?>
             <div class="wrap themes-page">
-
-            <?php
+        <?php
             if($filesystem == false){
 
             request_filesystem_credentials ( $url );
 
             }  else {
-            ?>
 
-            <?php
+            // Clear the transient to force a fresh update.
+            delete_transient( 'wooframework_version_data' );
+            	
             $localversion = get_option( 'woo_framework_version' );
             $remoteversion = woo_get_fw_version();
+            
             // Test if new version
             $upd = false;
 			$loc = explode( '.',$localversion);
-			$rem = explode( '.',$remoteversion);
+			$rem = explode( '.',$remoteversion['version']);
 
             if( $loc[0] < $rem[0] )
             	$upd = true;
@@ -1118,7 +1140,7 @@ function woothemes_framework_update_page(){
             	$upd = true;
 
             ?>
-            <div class="icon32" id="icon-tools"><br></div>
+            <?php screen_icon( 'tools' ); ?>
             <h2>Framework Update</h2>
             <span style="display:none"><?php echo $method; ?></span>
             <form method="post"  enctype="multipart/form-data" id="wooform" action="<?php /* echo $url; */ ?>">
@@ -1130,7 +1152,7 @@ function woothemes_framework_update_page(){
                 <p>We recommend backing up your theme files before updating.</p>
                 <p>&rarr; <strong>Your version:</strong> <?php echo $localversion; ?></p>
 
-                <p>&rarr; <strong>Current Version:</strong> <?php echo $remoteversion; ?></p>
+                <p>&rarr; <strong>Current Version:</strong> <?php echo $remoteversion['version']; ?></p>
 
                 <input type="submit" class="button" value="Update Framework" />
                 <?php } else { ?>
@@ -1138,7 +1160,7 @@ function woothemes_framework_update_page(){
                 <p>&rarr; <strong>Your version:</strong> <?php echo $localversion; ?></p>
                 <?php } ?>
                 <input type="hidden" name="woo_update_save" value="save" />
-                <input type="hidden" name="woo_ftp_cred" value="<?php echo esc_attr( base64_encode(serialize($_POST))); ?>" />
+                <input type="hidden" name="woo_ftp_cred" value="<?php echo esc_attr( serialize($_POST)); ?>" />
 
             </form>
             <?php } ?>
@@ -1164,7 +1186,7 @@ function woothemes_framework_update_head(){
 
 		if(isset($_POST['woo_ftp_cred'])){
 
-			$cred = unserialize(base64_decode($_POST['woo_ftp_cred']));
+			$cred = unserialize($_POST['woo_ftp_cred']);
 			$filesystem = WP_Filesystem($cred);
 
 		} else {
@@ -1212,7 +1234,7 @@ function woothemes_framework_update_head(){
 			return;
 
 		  }
-		//Unzipp it
+		//Unzip it
 		global $wp_filesystem;
 		$to = $wp_filesystem->wp_content_dir() . "/themes/" . get_option( 'template') . "/functions/";
 
@@ -1261,6 +1283,7 @@ function woothemes_framework_update_head(){
 		function woothemes_framework_updated_success() {
 			echo "<div id='framework-upgraded' class='updated fade'><p>New framework successfully downloaded, extracted and updated.</p></div>";
 		}
+		
 		add_action( 'admin_notices', 'woothemes_framework_updated_success' );
 
 		}
@@ -1269,46 +1292,82 @@ function woothemes_framework_update_head(){
  }
 }
 
-add_action( 'admin_head','woothemes_framework_update_head' );
+add_action( 'admin_head', 'woothemes_framework_update_head' );
 
 /*-----------------------------------------------------------------------------------*/
 /* WooFramework Version Getter */
 /*-----------------------------------------------------------------------------------*/
 
-function woo_get_fw_version($url = ''){
+function woo_get_fw_version( $url = '', $check_if_critical = false ) {
 
-	if(!empty($url)){
+	if( ! empty( $url ) ) {
 		$fw_url = $url;
 	} else {
     	$fw_url = 'http://www.woothemes.com/updates/functions-changelog.txt';
     }
+    
+    $output = array( 'version' => '', 'is_critical' => false );
+    
+    $version_data = get_transient( 'wooframework_version_data' );
 
-	$temp_file_addr = download_url($fw_url);
-	if(!is_wp_error($temp_file_addr) && $file_contents = file($temp_file_addr)) {
-        foreach ($file_contents as $line_num => $line) {
+	if ( $version_data != '' && $check_if_critical == false ) { return $version_data; }
+
+	$temp_file_addr = download_url( $fw_url );
+	if( ! is_wp_error( $temp_file_addr ) && $file_contents = file( $temp_file_addr ) ) {
+        foreach ( $file_contents as $line_num => $line ) {
 
                 $current_line =  $line;
 
-                if($line_num > 1){    // Not the first or second... dodgy :P
+                if( $line_num > 1 ) {    // Not the first or second... dodgy :P
 
-                    if (preg_match( '/^[0-9]/', $line)) {
+                    if ( preg_match( '/^[0-9]/', $line ) ) {
+                    
+							// Do critical update check.
+							if ( $check_if_critical && ( strtolower( trim( substr( $line, -10 ) ) ) == 'critical' ) ) {
+								$output['is_critical'] = true;
+							}
 
-                            $current_line = stristr($current_line,"version" );
-                            $current_line = preg_replace( '~[^0-9,.]~','',$current_line);
-                            $output = $current_line;
+                            $current_line = stristr( $current_line, 'version' );
+                            $current_line = preg_replace( '~[^0-9,.]~','',$current_line );
+                            $output['version'] = $current_line;
+                            
+                            // Set the transient containing the latest version number.
+							set_transient( 'wooframework_version_data', $output , 60*60*24 );
                             break;
                     }
                 }
         }
-        unlink($temp_file_addr);
+        unlink( $temp_file_addr );
         return $output;
 
-
     } else {
-        return 'Currently Unavailable';
+        return __( 'Currently Unavailable', 'woothemes' );
     }
 
-}
+} // End woo_get_fw_version()
+
+
+/*-----------------------------------------------------------------------------------*/
+/* WooFramework Version Checker */
+/*-----------------------------------------------------------------------------------*/
+
+function woo_framework_version_checker( $local_version, $check_if_critical = false ) {
+	$data = array( 'is_update' => false, 'version' => '1.0.0', 'status' => 'none' );
+	
+	if ( ! $local_version ) { return $data; }
+	
+	$version_data = woo_get_fw_version( '', $check_if_critical );
+	
+	$check = version_compare( $version_data['version'], $local_version ); // Returns 1 if there is an update available.
+	
+	if ( $check == 1 ) {
+		$data['is_update'] = true;
+		$data['version'] = $version_data['version'];
+		$data['is_critical'] = $version_data['is_critical'];
+	}
+	
+	return $data;
+} // End woo_framework_version_checker()
 
 /*-----------------------------------------------------------------------------------*/
 /* Woo URL shortener */
@@ -1377,25 +1436,19 @@ function make_bitly_url($url,$login,$appkey,$format = 'xml',$version = '2.0.1')
 
 //Alternative CURL function
 function file_get_contents_curl($url) {
-	if (_iscurlinstalled()) {
-		$ch = curl_init();
+	if ( $url == '' || $url == null ) { return ''; }
+	$data = '';
+	
+	$response = wp_remote_get( $url );
 
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
-		curl_setopt($ch, CURLOPT_URL, $url);
-
-		$data = curl_exec($ch);
-
-		if ($data === FALSE) {
-			$data =  "cURL Error: " . curl_error($ch);
-		}
-
-		curl_close($ch);
+	if ( is_wp_error( $response ) ) {
+		$data  = $url;
 	} else {
-		$data = $url;
+		$data = $response['body'];
 	}
+	
 	return $data;
-}
+} // End file_get_contents_curl()
 
 // Checks for presence of the cURL extension.
 function _iscurlinstalled() {
@@ -2018,7 +2071,7 @@ $google_fonts = array(	array( 'name' => "Cantarell", 'variant' => ':r,b,i,bi'),
 						array( 'name' => "Droid Serif", 'variant' => ':r,b,i,bi'),
 						array( 'name' => "IM Fell DW Pica", 'variant' => ':r,i'),
 						array( 'name' => "Inconsolata", 'variant' => ''),
-						array( 'name' => "Josefin Sans Std Light", 'variant' => ''),
+						array( 'name' => "Josefin Sans", 'variant' => ':400,400italic,700,700italic'),
 						array( 'name' => "Josefin Slab", 'variant' => ':r,b,i,bi'),
 						array( 'name' => "Lobster", 'variant' => ''),
 						array( 'name' => "Molengo", 'variant' => ''),
@@ -2062,7 +2115,7 @@ $google_fonts = array(	array( 'name' => "Cantarell", 'variant' => ':r,b,i,bi'),
 						array( 'name' => "Vibur", 'variant' => ''),
 						array( 'name' => "Sniglet", 'variant' => ':800'),
 						array( 'name' => "Syncopate", 'variant' => ''),
-						array( 'name' => "Cabin", 'variant' => ':b'),
+						array( 'name' => "Cabin", 'variant' => ':400,400italic,700,700italic,'),
 						array( 'name' => "Merriweather", 'variant' => ''),
 						array( 'name' => "Maiden Orange", 'variant' => ''),
 						array( 'name' => "Just Another Hand", 'variant' => ''),
@@ -2178,7 +2231,7 @@ $google_fonts = array(	array( 'name' => "Cantarell", 'variant' => ':r,b,i,bi'),
 						array( 'name' => "Nixie One", 'variant' => ''),
 						array( 'name' => "Redressed", 'variant' => ''),
 						array( 'name' => "Bangers", 'variant' => ''),
-						array( 'name' => "Open Sans Condensed", 'variant' => ':r,i'),
+						array( 'name' => "Open Sans Condensed", 'variant' => ':300,300italic'),
 						array( 'name' => "Open Sans", 'variant' => ':r,i,b,bi'),
 						array( 'name' => "Varela", 'variant' => ''),
 						array( 'name' => "Goblin One", 'variant' => ''),
@@ -2207,7 +2260,7 @@ $google_fonts = array(	array( 'name' => "Cantarell", 'variant' => ':r,b,i,bi'),
 						array( 'name' => "Ovo", 'variant' => ''),
 						array( 'name' => "IM Fell English", 'variant' => ':r,i'),
 						array( 'name' => "IM Fell English SC", 'variant' => ''),
-						array( 'name' => "Gloria Hallelujah ", 'variant' => ''),
+						array( 'name' => "Gloria Hallelujah", 'variant' => ''),
 						array( 'name' => "Kelly Slab", 'variant' => ''),
 						array( 'name' => "Black Ops One", 'variant' => ''),
 						array( 'name' => "Carme", 'variant' => ''),
@@ -2258,7 +2311,43 @@ $google_fonts = array(	array( 'name' => "Cantarell", 'variant' => ':r,b,i,bi'),
 						array( 'name' => "Chivo", 'variant' => ''),
 						array( 'name' => "Spinnaker", 'variant' => ''),
 						array( 'name' => "Poller One", 'variant' => ''),
-						array( 'name' => "Alike Angular", 'variant' => '')
+						array( 'name' => "Alike Angular", 'variant' => ''),
+						array( 'name' => "Gochi Hand", 'variant' => ''),
+						array( 'name' => "Poly", 'variant' => ''),
+						array( 'name' => "Andada", 'variant' => ''),
+						array( 'name' => "Federant", 'variant' => ''),
+						array( 'name' => "Ubuntu Condensed", 'variant' => ''),
+						array( 'name' => "Ubuntu Mono", 'variant' => ''),
+						array( 'name' => "Sancreek", 'variant' => ''),
+						array( 'name' => "Coda", 'variant' => ''),
+						array( 'name' => "Rancho", 'variant' => ''),
+						array( 'name' => "Satisfy", 'variant' => ''),
+						array( 'name' => "Pinyon Script", 'variant' => ''),
+						array( 'name' => "Vast Shadow", 'variant' => ''),
+						array( 'name' => "Marck Script", 'variant' => ''),
+						array( 'name' => "Salsa", 'variant' => ''),
+						array( 'name' => "Amatic SC", 'variant' => ''),
+						array( 'name' => "Quicksand", 'variant' => ''),
+						array( 'name' => "Linden Hill", 'variant' => ''),
+						array( 'name' => "Corben", 'variant' => ''),
+						array( 'name' => "Creepster Caps", 'variant' => ''),
+						array( 'name' => "Butcherman Caps", 'variant' => ''),
+						array( 'name' => "Eater Caps", 'variant' => ''),
+						array( 'name' => "Nosifer Caps", 'variant' => ''),
+						array( 'name' => "Atomic Age", 'variant' => ''),
+						array( 'name' => "Contrail One", 'variant' => ''),
+						array( 'name' => "Jockey One", 'variant' => ''),
+						array( 'name' => "Cabin Sketch", 'variant' => ':r,b'),
+						array( 'name' => "Fjord One", 'variant' => ''),
+						array( 'name' => "Rametto One", 'variant' => ''),
+						array( 'name' => "Mate", 'variant' => ':r,i'),
+						array( 'name' => "Mate SC", 'variant' => ''),
+						array( 'name' => "Arapey", 'variant' => ':r,i'),
+						array( 'name' => "Supermercado One", 'variant' => ''),
+						array( 'name' => "Petrona", 'variant' => ''),
+						array( 'name' => "Lancelot", 'variant' => ''),
+						array( 'name' => "Convergence", 'variant' => ''),
+						array( 'name' => "Bitter", 'variant' => '')
 );
 
 
@@ -2307,7 +2396,7 @@ if (!function_exists( "woo_google_webfonts")) {
 			if ( $fonts ) {
 				$fonts = str_replace( " ","+",$fonts);
 				$output .= "\n<!-- Google Webfonts -->\n";
-				$output .= '<link href="http://fonts.googleapis.com/css?family=' . $fonts .'" rel="stylesheet" type="text/css" />'."\n\n";
+				$output .= '<link href="http'. ( is_ssl() ? 's' : '' ) .'://fonts.googleapis.com/css?family=' . $fonts .'" rel="stylesheet" type="text/css" />'."\n\n";
 				$output = str_replace( '|"','"',$output);
 
 				echo $output;
@@ -2332,46 +2421,56 @@ if ( !function_exists( 'woo_home_page_menu_args') ) {
 /*-----------------------------------------------------------------------------------*/
 /* Buy Themes page
 /*-----------------------------------------------------------------------------------*/
-if ( !function_exists( 'woothemes_more_themes_page') ) {
+if ( ! function_exists( 'woothemes_more_themes_page' ) ) {
 	function woothemes_more_themes_page(){
         ?>
         <div class="wrap themes-page">
-	        <h2>More WooThemes</h2>
-
-			<?php // Get RSS Feed(s)
-	        include_once(ABSPATH . WPINC . '/feed.php' );
-	        $rss = fetch_feed( 'http://www.woothemes.com/?feed=more_themes' );
-	        // If the RSS is failed somehow.
-	        if ( is_wp_error($rss) ) {
-	            $error = $rss->get_error_code();
-	            if($error == 'simplepie-error') {
-	                //Simplepie Error
-	                echo "<div class='updated fade'><p>An error has occured with the RSS feed. (<code>". $error ."</code>)</p></div>";
-	            }
-	            return;
-	         }
-	        ?>
+	        <?php screen_icon( 'themes' ); ?><h2><?php _e( 'More WooThemes', 'woothemes' ); ?></h2>
 	        <div class="info">
-		        <a href="http://www.woothemes.com/pricing/">Join the WooThemes Club</a>
-		        <a href="http://www.woothemes.com/themes/">Themes Gallery</a>
-		        <a href="http://showcase.woothemes.com/">Theme Showcase</a>
+		        <a href="http://www.woothemes.com/pricing/"><?php _e( 'Join the WooThemes Club', 'woothemes' ); ?></a>
+		        <a href="http://www.woothemes.com/themes/"><?php _e( 'Themes Gallery', 'woothemes' ); ?></a>
+		        <a href="http://showcase.woothemes.com/"><?php _e( 'Theme Showcase', 'woothemes' ); ?></a>
 	        </div>
-
-	        <?php
-
-	        $maxitems = $rss->get_item_quantity(30);
-	        $items = $rss->get_items(0, 30);
-
+			<?php
+				$theme_data = get_transient( 'woothemes_buy_themes' );
+				
+				if ( ! $theme_data ) {
+					$html = '';
+					
+					// Get RSS Feed(s)
+			        include_once( ABSPATH . WPINC . '/feed.php' );
+			        $rss = fetch_feed( 'http://www.woothemes.com/?feed=more_themes' );
+			        // If the RSS is failed somehow.
+			        if ( is_wp_error($rss) ) {
+			            $error = $rss->get_error_code();
+			            if( $error == 'simplepie-error' ) {
+			                //Simplepie Error
+			                echo '<div class="updated fade"><p>' . sprintf( __( 'An error has occured with the RSS feed. (%s)', 'woothemes' ), '<code>' . $error . '</code>' ) . '</p></div>';
+			            }
+			            return;
+			         }
+		
+			        $maxitems = $rss->get_item_quantity( 30 );
+			        $items = $rss->get_items( 0, 30 );
+			        
+			        if ( empty( $items ) )  {
+			        	$html .= '<li>No items</li>';
+			        } else {
+			        	foreach ( $items as $i ) {
+			        		$html .= '<li class="theme">' . $i->get_description() . '</li>' . "\n";
+			        	}
+			        	
+			        	// Cache this data for 2 weeks.
+			        	set_transient( 'woothemes_buy_themes', $html , 60*60*336 );
+			        }
+	        	
+	        		// Set the theme data to be displayed.
+	        		$theme_data = $html;
+	        	
+	        	}
 	        ?>
 	        <ul class="themes">
-	        <?php if (empty($items)) echo '<li>No items</li>';
-	        else
-	        foreach ( $items as $item ) : ?>
-	            <li class="theme">
-	                <?php echo $item->get_description();?>
-	            </li>
-	        <?php
-	        endforeach; ?>
+	        <?php echo $theme_data; ?>
 	        </ul>
         </div>
 
@@ -2443,6 +2542,7 @@ if ( !function_exists( 'woo_custom_login_logo') ) {
 /* 'before' (optional) 				- The HTML to display before the paginated links.
 /* 'after' (optional) 				- The HTML to display after the paginated links.
 /* 'echo' (optional) 				- Whether or not to display the paginated links (alternative is to "return").
+/* 'use_search_permastruct' (optiona;) - Whether or not to use the "pretty" URL permastruct for search URLs.
 /*
 /* Query Parameter (optional) 		- Specify a custom query which you'd like to paginate.
 /*
@@ -2496,8 +2596,12 @@ if ( ! function_exists( 'woo_pagination' ) ) {
 			'type' => 'plain',
 			'before' => '<div class="pagination woo-pagination">', // Begin woo_pagination() arguments.
 			'after' => '</div>',
-			'echo' => true,
+			'echo' => true, 
+			'use_search_permastruct' => true
 		);
+
+		/* Allow themes/plugins to filter the default arguments. */
+		$defaults = apply_filters( 'woo_pagination_args_defaults', $defaults );
 
 		/* Add the $base argument to the array if the user is using permalinks. */
 		if( $wp_rewrite->using_permalinks() )
@@ -2505,8 +2609,8 @@ if ( ! function_exists( 'woo_pagination' ) ) {
 
 		/* If we're on a search results page, we need to change this up a bit. */
 		if ( is_search() ) {
-		/* If we're in BuddyPress, use the default "unpretty" URL structure. */
-			if ( class_exists( 'BP_Core_User' ) ) {
+		/* If we're in BuddyPress, or the user has selected to do so, use the default "unpretty" URL structure. */
+			if ( class_exists( 'BP_Core_User' ) || $defaults['use_search_permastruct'] == false ) {
 
 				$search_query = get_query_var( 's' );
 				$paged = get_query_var( 'paged' );
@@ -2516,8 +2620,8 @@ if ( ! function_exists( 'woo_pagination' ) ) {
 				$defaults['base'] = $base;
 			} else {
 				$search_permastruct = $wp_rewrite->get_search_permastruct();
-				if ( !empty( $search_permastruct ) )
-					$defaults['base'] = user_trailingslashit( trailingslashit( get_search_link() ) . 'page/%#%' );
+				if ( ! empty( $search_permastruct ) )
+					$defaults['base'] = user_trailingslashit( trailingslashit( urldecode( get_search_link() ) ) . 'page/%#%' );
 			}
 		}
 
@@ -2667,7 +2771,7 @@ function woo_breadcrumbs( $args = array() ) {
 				$path .= $post_type_object->rewrite['slug'];
 
 			/* If there's a path, check for parents. */
-			if ( !empty( $path ) )
+			if ( !empty( $path ) && '/' != $path )
 				$trail = array_merge( $trail, woo_breadcrumbs_get_parents( '', $path ) );
 
 			/* If there's an archive page, add it to the trail. */
@@ -2822,7 +2926,7 @@ function woo_breadcrumbs( $args = array() ) {
 		$trail['trail_end'] = __( '404 Not Found', $textdomain );
 
 	/* Allow child themes/plugins to filter the trail array. */
-	$trail = apply_filters( 'woo_breadcrumbs_trail', $trail );
+	$trail = apply_filters( 'woo_breadcrumbs_trail', $trail, $args );
 
 	/* Connect the breadcrumb trail if there are items in the trail. */
 	if ( is_array( $trail ) ) {
@@ -3474,6 +3578,83 @@ function woo_get_dynamic_values ( $settings ) {
  	return $posts;
  
  } // End woo_get_posts_by_taxonomy()
+
+/*-----------------------------------------------------------------------------------*/
+/* If the user has specified a "posts page", load the "Blog" page template there */
+/*-----------------------------------------------------------------------------------*/
+
+add_filter( 'template_include', 'woo_load_posts_page_blog_template', 10 );
+	
+if ( ! function_exists( 'woo_load_posts_page_blog_template' ) ) {
+	function woo_load_posts_page_blog_template ( $template ) {
+		if ( 'page' == get_option( 'show_on_front' ) && ( '' != get_option( 'page_for_posts' ) ) && is_home() ) {
+			$tpl = locate_template( array( 'template-blog.php' ) );
+			if ( $tpl != '' ) { $template = $tpl; }
+		}
+		return $template;
+	} // End woo_load_posts_page_blog_template()
+}
+
+/*-----------------------------------------------------------------------------------*/
+/* PressTrends API Integration */
+/*-----------------------------------------------------------------------------------*/
+
+/**
+ * woo_presstrends function.
+ *
+ * @description Send data to the PressTrends API.
+ * @access public
+ * @return void
+ */
+
+if ( defined( 'WOO_PRESSTRENDS_THEMEKEY' ) ) {
+	if ( get_option( 'framework_woo_presstrends_disable', 'false' ) != 'true' ) {
+		add_action( 'admin_footer', 'woo_presstrends', 100 );
+	}
+}
+
+function woo_presstrends () {
+	if ( ! defined( 'WOO_PRESSTRENDS_THEMEKEY' ) ) { return; }
+	
+	// Add your PressTrends API Keys
+	$api_key = 'ypvilflyjb7yyht8as1u2k0no3rxbgl2p4a9';
+	$auth = WOO_PRESSTRENDS_THEMEKEY;
+
+	// Check if we have cached data.
+	$data = get_transient( 'woo_presstrends_data' );
+
+	if ( ! $data || $data == '' ) {
+		// Don't edit below
+		$api_base = 'http://api.presstrends.io/index.php/api/sites/add/auth/';
+		
+		// Run setup
+		$url = $api_base . $auth . '/api/' . $api_key . '/';
+		$data = array();
+		$count_posts = wp_count_posts();
+		$comments_count = wp_count_comments();
+		$theme_data = get_theme_data( get_template_directory() . '/style.css' );
+		$plugin_count = count( get_option( 'active_plugins' ) );
+		$data['url'] = stripslashes( str_replace( array( 'http://', '/', ':' ), '', site_url() ) );
+		$data['posts'] = $count_posts->publish;
+		$data['comments'] = $comments_count->total_comments;
+		$data['theme_version'] = $theme_data['Version'];
+		$data['theme_name'] = str_replace( ' ', '', get_bloginfo( 'name' ) );
+		$data['plugins'] = $plugin_count;
+		
+		foreach ( $data as $k => $v ) {
+			$url .= $k . '/' . $v . '/';
+		}
+		
+		// Perform the remote request.
+		$response = wp_remote_get( $url );
+		
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
+			// Silence is golden.
+		} else {
+			set_transient( 'woo_presstrends_data', $data, 60*60*24 );
+		}
+	}
+} // End woo_presstrends()
 
 /*-----------------------------------------------------------------------------------*/
 /* THE END */

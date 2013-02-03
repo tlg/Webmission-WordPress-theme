@@ -45,7 +45,7 @@ TABLE OF CONTENTS
 add_filter( 'widget_text', 'do_shortcode' );
 
 // Add stylesheet for shortcodes to HEAD (added to HEAD in admin-setup.php)
-if ( !function_exists( 'woo_shortcode_stylesheet' ) AND get_option( 'framework_woo_disable_shortcodes') != "true" ) {
+if ( ! function_exists( 'woo_shortcode_stylesheet' ) && get_option( 'framework_woo_disable_shortcodes' ) != 'true' ) {
 	function woo_shortcode_stylesheet() {
 		echo "<!-- Woo Shortcodes CSS -->\n";
 		echo '<link href="'. get_template_directory_uri() . '/functions/css/shortcodes.css" rel="stylesheet" type="text/css" />'."\n\n";
@@ -53,10 +53,10 @@ if ( !function_exists( 'woo_shortcode_stylesheet' ) AND get_option( 'framework_w
 }
 
 // Replace WP autop formatting
-if (!function_exists( "woo_remove_wpautop")) {
-	function woo_remove_wpautop($content) {
+if ( ! function_exists( 'woo_remove_wpautop' ) ) {
+	function woo_remove_wpautop( $content ) {
 		$content = do_shortcode( shortcode_unautop( $content ) );
-		$content = preg_replace( '#^<\/p>|^<br \/>|<p>$#', '', $content);
+		$content = preg_replace( '#^<\/p>|^<br \/>|<p>$#', '', $content );
 		return $content;
 	}
 }
@@ -65,72 +65,25 @@ if (!function_exists( "woo_remove_wpautop")) {
 /* 1.1 Output shortcode JS in footer */
 /*-----------------------------------------------------------------------------------*/
 
-// Enqueue shortcode JS file.
+add_action( 'wp_print_scripts', 'woo_register_shortcode_js', 10 );
 
-add_action( 'init', 'woo_enqueue_shortcode_js' );
+function woo_register_shortcode_js () {
+	wp_register_script( 'woo-shortcodes', get_template_directory_uri() . '/functions/js/shortcodes.js', array( 'jquery', 'jquery-ui-tabs' ) );
+} // End woo_register_shortcode_js()
+
+add_action( 'wp_footer', 'woo_enqueue_shortcode_js', 10 );
 
 function woo_enqueue_shortcode_js () {
-
-	if ( is_admin() ) {} else {
-
-		wp_enqueue_script( 'woo-shortcodes', get_template_directory_uri() . '/functions/js/shortcodes.js', array( 'jquery', 'jquery-ui-tabs' ), true );
-
+	if ( ! is_admin() && defined( 'WOO_SHORTCODE_JS' ) ) {
+		wp_enqueue_script( 'woo-shortcodes' );
+		
+		global $wp_scripts;
+		$wp_scripts->to_do = array( 'woo-shortcodes' );
+		
+		wp_print_scripts();
 	} // End IF Statement
 
 } // End woo_enqueue_shortcode_js()
-
-// Check if option to output shortcode JS is active
-if (!function_exists( "woo_check_shortcode_js")) {
-	function woo_check_shortcode_js($shortcode) {
-	   	$js = get_option( "woo_sc_js" );
-	   	if ( !$js )
-	   		woo_add_shortcode_js($shortcode);
-	   	else {
-	   		if ( !in_array($shortcode, $js) ) {
-		   		$js[] = $shortcode;
-	   			update_option( "woo_sc_js", $js);
-	   		}
-	   	}
-	}
-}
-
-// Add option to handle JS output
-if (!function_exists( "woo_add_shortcode_js")) {
-	function woo_add_shortcode_js($shortcode) {
-		$update = array();
-		$update[] = $shortcode;
-		update_option( "woo_sc_js", $update);
-	}
-}
-
-// Output queued shortcode JS in footer
-if (!function_exists( "woo_output_shortcode_js")) {
-	function woo_output_shortcode_js() {
-		$option = get_option( 'woo_sc_js' );
-		if ( $option ) {
-
-			// Toggle JS output
-			if ( in_array( 'toggle', $option) ) {
-
-			   	$output = '
-<script type="text/javascript">
-	jQuery(document).ready(function() {
-		jQuery( ".woo-sc-toggle-box").hide();
-		jQuery( ".woo-sc-toggle-trigger").click(function() {
-			jQuery(this).next( ".woo-sc-toggle-box").slideToggle(400);
-		});
-	});
-</script>
-';
-				echo $output;
-			}
-
-			// Reset option
-			delete_option( 'woo_sc_js' );
-		}
-	}
-}
-add_action( 'wp_footer', 'woo_output_shortcode_js' );
 
 /*-----------------------------------------------------------------------------------*/
 /* 2. Boxes - box
@@ -145,7 +98,7 @@ Optional arguments:
  - icon: none OR full URL to a custom icon
 
 */
-function woo_shortcode_box($atts, $content = null) {
+function woo_shortcode_box( $atts, $content = null ) {
    extract(shortcode_atts(array(	'type' => 'normal',
    									'size' => '',
    									'style' => '',
@@ -658,11 +611,18 @@ function woo_shortcode_fblike($atts, $content = null) {
 	if ( !$url )
 		$url = get_permalink($post->ID);
 
-	$height = '60';
+	$height = '65';
 	if ( $showfaces == 'true')
 		$height = '100';
 
 	if ( ! $width || ! is_numeric( $width ) ) { $width = 450; } // End IF Statement
+
+	// Set the width to "auto" if "showfaces" is off and the default width is still set.
+	$widthpx = $width . 'px';
+	if ( $width == 450 && $showfaces == 'false' ) { $widthpx = 'auto'; }
+	
+	// Set the height to 20 if "showfaces" is disabled and the style is either "standard" or "button_count".
+	if ( $showfaces == 'false' && ( $style != 'box_count' ) ) { $height = 25; }
 
 	switch ( $float ) {
 
@@ -685,7 +645,7 @@ function woo_shortcode_fblike($atts, $content = null) {
 
 	$output = '
 <div class="woo-fblike '.$float.'">
-<iframe src="http://www.facebook.com/plugins/like.php?href='.$url.'&amp;layout='.$style.'&amp;show_faces='.$showfaces.'&amp;width='.$width.'&amp;action='.$verb.'&amp;colorscheme='.$colorscheme.'&amp;font=' . $font . '" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:'.$width.'px; height:'.$height.'px"></iframe>
+<iframe src="http://www.facebook.com/plugins/like.php?href=' . $url . '&amp;layout=' . $style . '&amp;show_faces=' . $showfaces . '&amp;width=' . $width . '&amp;action=' . $verb . '&amp;colorscheme=' . $colorscheme . '&amp;font=' . $font . '" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:' . $widthpx . '; height:' . $height . 'px;"></iframe>
 </div>
 	';
 	return $output;
@@ -926,16 +886,21 @@ Optional arguments:
  - style: download, note, tick, info, alert
  - url: the url for your link
  - icon: add an url to a custom icon
+ - title: optional title attribute
 
 */
-function woo_shortcode_ilink($atts, $content = null) {
-   	extract(shortcode_atts(array( 'style' => 'info', 'url' => '', 'icon' => ''), $atts));
+function woo_shortcode_ilink( $atts, $content = null ) {
+   	extract( shortcode_atts( array( 'style' => 'info', 'url' => '', 'icon' => '', 'title' => '' ), $atts ) );
 
-   	$custom_icon = '';
-   	if ( $icon )
-   		$custom_icon = 'style="background:url( '.$icon.') no-repeat left 40%;"';
-
-   return '<span class="woo-sc-ilink"><a class="'.$style.'" href="'.$url.'" '.$custom_icon.'>' . woo_remove_wpautop($content) . '</a></span>';
+	$atts = '';
+   	if ( $icon != '' ) {
+   		$atts .= ' style="background: url( ' . $icon . ') no-repeat left 40%;"';
+   	}
+   	if ( $title != '' ) {
+   		$atts .= ' title="' . esc_attr( $title ) . '"';
+   	}
+   	
+   	return '<span class="woo-sc-ilink"><a class="' . $style . '" href="' . $url . '"' . $atts . '>' . woo_remove_wpautop( $content ) . '</a></span>';
 }
 add_shortcode( 'ilink', 'woo_shortcode_ilink' );
 
@@ -953,6 +918,9 @@ Optional arguments:
 
 */
 function woo_shortcode_toggle ( $atts, $content = null ) {
+
+		// Instruct the shortcode JavaScript to load.
+		if ( ! defined( 'WOO_SHORTCODE_JS' ) ) { define( 'WOO_SHORTCODE_JS', 'load' ); }
 
 		$defaults = array(
 							'title_open' => __( 'Hide the Content', 'woothemes' ),
@@ -1032,15 +1000,15 @@ Optional arguments:
 
 */
 function woo_shortcode_fbshare($atts, $content = null) {
-   	extract(shortcode_atts(array( 'url' => '', 'type' => 'button', 'float' => 'left' ), $atts));
+   	extract( shortcode_atts( array( 'url' => '', 'type' => 'button', 'float' => 'left' ), $atts ) );
 
 	global $post;
 
-	if ( $url == '' ) { $url = get_permalink($post->ID); } // End IF Statement
+	if ( isset( $url ) && $url == '' && isset( $post ) ) { $url = get_permalink( $post->ID ); } // End IF Statement
 
 	$output = '
-<div class="woo-fbshare '.$float.'">
-<a name="fb_share" type="'.$type.'" share_url="'.$url.'">' . woo_remove_wpautop($content) . '</a>
+<div class="woo-fbshare ' . $float . '">
+<a name="fb_share" type="' . $type . '" share_url="' . $url . '">' . woo_remove_wpautop( $content ) . '</a>
 <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share"
         type="text/javascript">
 </script>
@@ -1719,6 +1687,9 @@ add_shortcode( 'contact_form', 'woo_shortcode_contactform' );
 
 function woo_shortcode_tabs ( $atts, $content = null ) {
 
+		// Instruct the shortcode JavaScript to load.
+		if ( ! defined( 'WOO_SHORTCODE_JS' ) ) { define( 'WOO_SHORTCODE_JS', 'load' ); }
+
 		$defaults = array( 'style' => 'default', 'title' => '', 'css' => '' );
 
 		extract( shortcode_atts( $defaults, $atts ) );
@@ -1931,7 +1902,7 @@ function woo_shortcode_typography_loadgooglefonts ( $font = '' ) {
 
 		} // End IF Statement
 
-		echo "<link rel='stylesheet' id='" . 'woo-googlefont-' . sanitize_title( $f ) . "'  href='" . 'http://fonts.googleapis.com/css?family=' . $f_include . '' . "' type='text/css' media='screen' />" . "\n";
+		echo "<link rel='stylesheet' id='" . 'woo-googlefont-' . sanitize_title( $f ) . "'  href='" . 'http'. ( is_ssl() ? 's' : '' ) .'://fonts.googleapis.com/css?family=' . $f_include . '' . "' type='text/css' media='screen' />" . "\n";
 
 	} else {
 
@@ -1984,7 +1955,7 @@ function woo_shortcode_typography_loadgooglefonts ( $font = '' ) {
 
 				} // End IF Statement
 
-				wp_enqueue_style( 'woo-googlefont-' . sanitize_title( $f ), 'http://fonts.googleapis.com/css?family=' . $f_include . '', array(), '3.6', 'screen' );
+				wp_enqueue_style( 'woo-googlefont-' . sanitize_title( $f ), 'http'. ( is_ssl() ? 's' : '' ) .'://fonts.googleapis.com/css?family=' . $f_include . '', array(), '3.6', 'screen' );
 
 			} // End FOREACH Loop
 
@@ -2253,15 +2224,20 @@ function woo_shortcode_google_plusone ( $atts, $content = null ) {
 						'count' => '',
 						'href' => '',
 						'callback' => '',
-						'float' => 'none'
+						'float' => 'none', 
+						'annotation' => 'none'
 					);
 
 	$atts = shortcode_atts( $defaults, $atts );
 
 	extract( $atts );
 
+	$params = array();
+
 	$allowed_floats = array( 'left' => ' fl', 'right' => ' fr', 'none' => '' );
 	if ( ! in_array( $float, array_keys( $allowed_floats ) ) ) { $float = 'none'; }
+	
+	if ( ! in_array( $annotation, array( 'bubble', 'inline', 'none' ) ) ) { $annotation = 'none'; } 
 
 	// A friendly-looking array of supported languages, along with their codes.
 	$supported_languages = array(
@@ -2323,7 +2299,7 @@ function woo_shortcode_google_plusone ( $atts, $content = null ) {
 
 	foreach ( $atts as $k => $v ) {
 		if ( ${$k} != '' ) {
-			$tag_atts .= ' ' . $k . '="' . ${$k} . '"';
+			$tag_atts .= ' data-' . $k . '="' . ${$k} . '"';
 		}
 	}
 

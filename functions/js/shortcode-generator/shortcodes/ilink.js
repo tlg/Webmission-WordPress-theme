@@ -25,6 +25,11 @@ wooShortcodeMeta={
 			label:"Icon",
 			id:"icon",
 			help:"Optional. Url to a custom icon."
+		},
+		{
+			label:"Title Attribute",
+			id:"title",
+			help:"Optional. Link title text (for the 'title' attribute)."
 		}
 		],
 		defaultContent:"Download",

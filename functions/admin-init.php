@@ -2,14 +2,16 @@
 /*-----------------------------------------------------------------------------------*/
 /* WooThemes Framework Version & Theme Version */
 /*-----------------------------------------------------------------------------------*/
-function woo_version_init(){
+function woo_version_init() {
 
-    $woo_framework_version = '4.6.1';
+    $woo_framework_version = '4.9.1';
 
-    if ( get_option( 'woo_framework_version' ) != $woo_framework_version )
+    if ( get_option( 'woo_framework_version' ) != $woo_framework_version ) {
     	update_option( 'woo_framework_version', $woo_framework_version );
+    }
 
 }
+
 add_action( 'init', 'woo_version_init', 10 );
 
 function woo_version(){
@@ -19,8 +21,8 @@ function woo_version(){
     $woo_framework_version = get_option( 'woo_framework_version' );
 
 	echo "\n<!-- Theme version -->\n";
-    echo '<meta name="generator" content="'. esc_attr(get_option( 'woo_themename')).' '. $theme_version .'" />' ."\n";
-    echo '<meta name="generator" content="WooFramework '. esc_attr($woo_framework_version) .'" />' ."\n";
+    echo '<meta name="generator" content="'. esc_attr( get_option( 'woo_themename' ) ) . ' ' . $theme_version . '" />' ."\n";
+    echo '<meta name="generator" content="WooFramework '. esc_attr( $woo_framework_version ) .'" />' ."\n";
 
 }
 // Add or remove Generator meta tags

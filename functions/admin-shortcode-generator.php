@@ -61,8 +61,9 @@ class WooThemes_Shortcode_Generator {
 -----------------------------------------------------------------------------------*/
 
 	function init() {
-	
-		if ( ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) && get_user_option( 'rich_editing') == 'true' )  {
+		global $pagenow;
+		
+		if ( ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) && get_user_option( 'rich_editing') == 'true' && ( in_array( $pagenow, array( 'post.php', 'post-new.php', 'page-new.php', 'page.php' ) ) ) )  {
 		  	
 		  	// Add the tinyMCE buttons and plugins.
 			add_filter( 'mce_buttons', array( &$this, 'filter_mce_buttons' ) );
